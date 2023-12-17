@@ -28,6 +28,12 @@ a {
     color-scheme: dark;
   }
 }
+.page{
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 input.rbt-input-main.form-control.rbt-input::placeholder {
   color: #d3d3d375;
 

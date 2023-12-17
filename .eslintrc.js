@@ -15,6 +15,7 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    'no-console': 'off',
     'react/jsx-filename-extension': [
       2,
       { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
@@ -28,6 +29,13 @@ module.exports = {
       },
     ],
     'react/jsx-props-no-spreading': 'off',
+    'no-param-reassign': [
+      'error',
+      {
+        props: true,
+        ignorePropertyModificationsFor: ['state'],
+      },
+    ],
     'import/extensions': [
       'error',
       'ignorePackages',

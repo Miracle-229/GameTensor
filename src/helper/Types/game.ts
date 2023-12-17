@@ -22,3 +22,14 @@ export type IGameData = {
     name: string;
   }[];
 };
+
+export interface LayoutProps {
+  children: React.ReactNode;
+  title: string;
+}
+
+export type Tags = {
+  id: number;
+  name: string;
+  image_background: string;
+};
