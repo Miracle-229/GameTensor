@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { AiFillLike } from 'react-icons/ai';
@@ -16,7 +17,7 @@ function Search() {
   const search = async (query: string) => {
     try {
       const response = await dispatch(searchGamesAction(query));
-      if (response.payload && response.payload.length > 0) {
+      if (response.payload && Array.isArray(response.payload)) {
         console.log(response.payload);
         setOptions(response.payload);
         setIsLoading(true);

@@ -1,6 +1,13 @@
 /* eslint-disable no-console */
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+'use client';
+
+import { createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { HYDRATE } from 'next-redux-wrapper';
+import type { AppState } from './store';
+
+const hydrate = createAction<AppState>(HYDRATE);
 
 export const getTagsAction = createAsyncThunk('getGenres', async () => {
   const GENRE_URL = `${process.env.API_URL}genres`;
@@ -10,23 +17,29 @@ export const getTagsAction = createAsyncThunk('getGenres', async () => {
         key: process.env.API_KEY,
       },
     });
-    return response.data;
+    return response.data.results;
   } catch (error) {
     console.error('Error fetching genres:', error);
-    return [];
+    throw error;
   }
 });
 
 export const tagsSlice = createSlice({
-  name: 'genres',
+  name: 'tags',
   initialState: {
     data: [],
-    status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
-    error: null as string | null, // Change 'Error' to 'string' or the appropriate type
+    status: 'idle',
+    error: null as string | null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(hydrate, (state, action) => {
+        return {
+          ...state,
+          ...action.payload.tags,
+        };
+      })
       .addCase(getTagsAction.pending, (state) => {
         state.status = 'loading';
         state.error = null;

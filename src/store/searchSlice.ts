@@ -1,7 +1,14 @@
 /* eslint-disable no-console */
+
+'use client';
+
 import { IGameData } from '@/helper/Types/game';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { HYDRATE } from 'next-redux-wrapper';
+import type { AppState } from './store';
+
+const hydrate = createAction<AppState>(HYDRATE);
 
 export const searchGamesAction = createAsyncThunk(
   'searchGames',
@@ -44,6 +51,12 @@ export const searchSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(hydrate, (state, action) => {
+        return {
+          ...state,
+          ...action.payload.search,
+        };
+      })
       .addCase(searchGamesAction.pending, (state) => {
         state.status = 'loading';
         state.error = null;

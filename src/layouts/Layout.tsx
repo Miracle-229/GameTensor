@@ -1,7 +1,6 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { LayoutProps } from '@/helper/Types/game';
-import Providers from '@/store/Proveders';
 import Head from 'next/head';
 
 export default function Layout({ children, title }: LayoutProps) {
@@ -13,13 +12,11 @@ export default function Layout({ children, title }: LayoutProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Providers>
-        <div className="page">
-          <Header />
-          {children}
-          <Footer />
-        </div>
-      </Providers>
+      <div className="page">
+        <Header />
+        {children}
+        <Footer />
+      </div>
     </>
   );
 }
