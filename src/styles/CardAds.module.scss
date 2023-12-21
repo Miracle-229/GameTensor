@@ -1,0 +1,31 @@
+.main {
+  max-width: 265px;
+  background-color: #2f2f2f;
+  border-radius: 30px;
+}
+.image {
+  border-radius: 30px;
+}
+.ads_inf_main {
+  padding: 10px 15px 0px 15px;
+}
+.active {
+  display: flex;
+  justify-content: space-between;
+}
+.inf {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.icon {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+.inf_price {
+  display: flex;
+  justify-content: space-between;
+  > *:not(:first-child) {
+    margin-left: 25px;
+  }
+}
