@@ -30,7 +30,7 @@ jobs:
 
     steps:
     - name: Deploy to Vercel
-      uses: amondnet/vercel-action
+      uses: amondnet/vercel-action@main
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
