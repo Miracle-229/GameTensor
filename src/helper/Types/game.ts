@@ -33,3 +33,12 @@ export type Tags = {
   name: string;
   image_background: string;
 };
+
+export type Ads = {
+  id: number;
+  slug: string;
+  name: string;
+  playtime: number;
+  metacritic: number;
+  background_image: string;
+};

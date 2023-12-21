@@ -4,12 +4,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import { searchSlice } from './searchSlice';
 import { tagsSlice } from './tagsSlice';
+import { adsSlice } from './adsSlice';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       search: searchSlice.reducer,
       tags: tagsSlice.reducer,
+      ads: adsSlice.reducer,
     },
   });
 };
