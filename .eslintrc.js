@@ -15,11 +15,13 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    'jsx-a11y/control-has-associated-label': 'off',
     'no-console': 'off',
     'react/jsx-filename-extension': [
       2,
       { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
     ],
+    'import/prefer-default-export': ['off'],
     'import/no-extraneous-dependencies': [
       'error',
       {

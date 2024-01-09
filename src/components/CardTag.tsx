@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import style from '@/styles/CardTag.module.scss';
-import { Tags } from '@/helper/Types/game';
+import { ITags } from '@/helper/Types/game';
 
-function CardTag({ dataTags }: { dataTags: Tags }) {
+function CardTag({ dataTags }: { dataTags: ITags }) {
   return (
     <div key={dataTags.id} className={style.main}>
       <h3>{dataTags.name}</h3>

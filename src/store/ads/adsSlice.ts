@@ -2,42 +2,36 @@
 
 'use client';
 
-import { createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createAction, createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
-import type { AppState } from './store';
+import { IAds } from '@/helper/Types/game';
+import type { AppState } from '../store';
+import { getAdsAction } from './adsThunk';
 
 const hydrate = createAction<AppState>(HYDRATE);
 
-export const getAdsAction = createAsyncThunk('getGenres', async () => {
-  const ADS_URL = `${process.env.API_URL}games`;
-  try {
-    const response = await axios.get(ADS_URL, {
-      params: {
-        key: process.env.API_KEY,
-      },
-    });
-    return response.data.results;
-  } catch (error) {
-    console.error('Error fetching genres:', error);
-    throw error;
-  }
-});
+type AdsState = {
+  data: IAds[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+};
+
+const initialState: AdsState = {
+  data: [],
+  status: 'idle',
+  error: null,
+};
 
 export const adsSlice = createSlice({
   name: 'ads',
-  initialState: {
-    data: [],
-    status: 'idle',
-    error: null as string | null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(hydrate, (state, action) => {
         return {
           ...state,
-          ...action.payload.tags,
+          ...action.payload.ads,
         };
       })
       .addCase(getAdsAction.pending, (state) => {

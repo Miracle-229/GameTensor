@@ -2,9 +2,10 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
-import { searchSlice } from './searchSlice';
-import { tagsSlice } from './tagsSlice';
-import { adsSlice } from './adsSlice';
+import { searchSlice } from './search/searchSlice';
+import { tagsSlice } from './tags/tagsSlice';
+import { adsSlice } from './ads/adsSlice';
+import { idSlice } from './id/idSlice';
 
 export const makeStore = () => {
   return configureStore({
@@ -12,6 +13,7 @@ export const makeStore = () => {
       search: searchSlice.reducer,
       tags: tagsSlice.reducer,
       ads: adsSlice.reducer,
+      id: idSlice.reducer,
     },
   });
 };

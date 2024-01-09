@@ -3,9 +3,9 @@ import style from '@/styles/CardAds.module.scss';
 import Image from 'next/image';
 import { AiFillLike } from 'react-icons/ai';
 import { FaRegBookmark } from 'react-icons/fa';
-import { Ads } from '@/helper/Types/game';
+import { IAds } from '@/helper/Types/game';
 
-function CardAds({ adsData }: { adsData: Ads }) {
+function CardAds({ adsData }: { adsData: IAds }) {
   return (
     <div className={style.main}>
       <Image

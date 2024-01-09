@@ -2,35 +2,29 @@
 
 'use client';
 
-import { createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createAction, createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
-import type { AppState } from './store';
+import { ITags } from '@/helper/Types/game';
+import type { AppState } from '../store';
+import { getTagsAction } from './tagsThunk';
 
 const hydrate = createAction<AppState>(HYDRATE);
 
-export const getTagsAction = createAsyncThunk('getGenres', async () => {
-  const GENRE_URL = `${process.env.API_URL}genres`;
-  try {
-    const response = await axios.get(GENRE_URL, {
-      params: {
-        key: process.env.API_KEY,
-      },
-    });
-    return response.data.results;
-  } catch (error) {
-    console.error('Error fetching genres:', error);
-    throw error;
-  }
-});
+type TagsState = {
+  data: ITags[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+};
+
+const initialState: TagsState = {
+  data: [],
+  status: 'idle',
+  error: null,
+};
 
 export const tagsSlice = createSlice({
   name: 'tags',
-  initialState: {
-    data: [],
-    status: 'idle',
-    error: null as string | null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder

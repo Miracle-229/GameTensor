@@ -5,24 +5,21 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { AiFillLike } from 'react-icons/ai';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
-import { IGameData } from '@/helper/Types/game';
-import { useDispatch } from 'react-redux';
-import { searchGamesAction } from '@/store/searchSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/store/store';
+import { searchGamesAction } from '@/store/search/searchThunk';
+import { searchData } from '@/store/search/searchSelector';
 
 function Search() {
   const dispatch = useDispatch<AppDispatch>();
-  const [options, setOptions] = useState<IGameData[]>([]);
+  const options = useSelector(searchData);
   const [isLoading, setIsLoading] = useState(false);
   const search = async (query: string) => {
     try {
       const response = await dispatch(searchGamesAction(query));
       if (response.payload && Array.isArray(response.payload)) {
-        console.log(response.payload);
-        setOptions(response.payload);
         setIsLoading(true);
       } else {
-        setOptions([]);
         console.log('No data available');
         setIsLoading(false);
       }
