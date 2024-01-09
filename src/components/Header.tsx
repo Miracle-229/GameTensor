@@ -59,14 +59,14 @@ function Header() {
         {showMenu ? (
           <>
             <div className={style.search}>
-              <div className={style.logo}>
+              <Link href="/" className={style.logo}>
                 <Image
                   src="/logo.png"
                   alt="My Image"
                   width={width}
                   height={height}
                 />
-              </div>
+              </Link>
               <Search />
             </div>
             <div className={style.block_header_user}>
@@ -96,16 +96,16 @@ function Header() {
         ) : (
           <>
             <div className={style.block_header}>
-              <div className={style.logo}>
+              <Link href="/" className={style.logo}>
                 <Image
                   src="/logo.png"
                   alt="My Image"
                   width={width}
                   height={height}
                 />
-              </div>
+              </Link>
               <Link className={style.link} href="/">
-                Home
+                Rules
               </Link>
               <Link className={style.link} href="/">
                 Advertisements
@@ -140,7 +140,7 @@ function Header() {
       {menu && (
         <div className={style.menu}>
           <Link className={style.link} href="/">
-            Home
+            Rules
           </Link>
           <Link className={style.link} href="/">
             Advertisements

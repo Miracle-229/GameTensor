@@ -1,19 +1,20 @@
 import CardAds from '@/components/CardAds';
 import CardTag from '@/components/CardTag';
-import { Ads, Tags } from '@/helper/Types/game';
+import { IAds, ITags } from '@/helper/Types/game';
 import Layout from '@/layouts/Layout';
-import { getAdsAction } from '@/store/adsSlice';
+import { getAdsAction } from '@/store/ads/adsThunk';
 import { wrapper } from '@/store/store';
-import { getTagsAction } from '@/store/tagsSlice';
+import { getTagsAction } from '@/store/tags/tagsThunk';
 import style from '@/styles/Home.module.scss';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Home({
   tagsData,
   adsData,
 }: {
-  tagsData: Tags[];
-  adsData: Ads[];
+  tagsData: ITags[];
+  adsData: IAds[];
 }) {
   // для проверки на netrwork
   // const dispatch = useDispatch<AppDispatch>();
@@ -62,7 +63,9 @@ export default function Home({
           <h3 className={style.h3}>Trending advertisements</h3>
           <div className={style.ads_main}>
             {adsData.slice(0, 6).map((data) => (
-              <CardAds key={data.id} adsData={data} />
+              <Link href={`/${data.id}`} key={data.id}>
+                <CardAds adsData={data} />
+              </Link>
             ))}
           </div>
         </div>

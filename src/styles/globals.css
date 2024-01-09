@@ -107,6 +107,7 @@ div#basic-navbar-nav {
   border: none;
   padding: 5px 10px;
   margin-top: 5px !important;
+  z-index: 9999;
 }
 a {
   text-decoration: none !important;
@@ -162,6 +163,21 @@ padding: 3px 5px;
 display: flex;
 align-items: center;
 }
+.image-gallery-svg{
+  width: 30px !important;
+}
+.image-gallery-image{
+  border-radius: 30px;
+}
+
+.image-gallery-thumbnail{
+   border-radius: 15px;
+}
+.image-gallery-thumbnail-image{
+   border-radius: 15px;
+   width: 150px;
+   height: 90px;
+}
 
 @media (max-width: 1024px) {
   input.rbt-input-main.form-control.rbt-input {
@@ -172,6 +188,7 @@ align-items: center;
     outline: none;
     border-radius: 35px;
     padding: 5px 10px;
+    z-index: 9999;
 }
 .render-option-image{
   height: 75px;
@@ -216,7 +233,7 @@ align-items: center;
   input.rbt-input-main.form-control.rbt-input {
     width: 165px;
     height: 25px;
-    font-size: 13px;
+    font-size: 14px;
     background-color: #2f2f2f;
     border: none;
     outline: none;
@@ -235,5 +252,12 @@ align-items: center;
   margin-top: 5px;
   color: #b3b5b4;
   font-size: 12px;
+}
+}
+@media (max-width: 364px) {
+  input.rbt-input-main.form-control.rbt-input {
+    width: 147px;
+    height: 35px;
+    font-size: 15px;
 }
 }

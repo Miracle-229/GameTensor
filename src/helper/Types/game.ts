@@ -8,6 +8,7 @@ export type IGameData = {
   poster: string;
   metacritic: string;
   released?: string;
+  playtime?: string;
   date: string;
   parent_platforms: {
     platform: {
@@ -28,13 +29,13 @@ export interface LayoutProps {
   title: string;
 }
 
-export type Tags = {
+export type ITags = {
   id: number;
   name: string;
   image_background: string;
 };
 
-export type Ads = {
+export type IAds = {
   id: number;
   slug: string;
   name: string;
