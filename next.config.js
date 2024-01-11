@@ -1,16 +1,17 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('next').NextConfig} */
-const fs = require('fs');
-const dotenv = require('dotenv');
+require('dotenv').config();
 
-const env = dotenv.parse(fs.readFileSync('.env.local'));
 const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ['media.rawg.io', 'lh3.googleusercontent.com'],
   },
-  env,
+  env: {
+    API_URL: process.env.API_URL,
+    API_KEY: process.env.API_KEY,
+  },
 };
 
 module.exports = nextConfig;
