@@ -1,27 +1,40 @@
-export type IGameData = {
-  id: number;
-  slug?: string;
+export type IAuth = {
+  login: string;
+  password?: string;
+  userId?: number;
+  email?: string;
+  accessToken?: string;
+  refreshToken?: string;
+};
+
+export type ITags = {
+  tagId: number;
   name: string;
-  label: string;
-  rating: string;
+};
+
+export type IGameData = {
+  adId: number;
+  user: IAuth;
+  title: string;
   background_image: string;
-  poster: string;
-  metacritic: string;
-  released?: string;
-  playtime?: string;
+  price: string;
   date: string;
-  parent_platforms: {
-    platform: {
-      slug: string;
-    };
+  tags: ITags[];
+  description: string;
+  creationDate: string;
+  medias: {
+    amId: string;
+    preview?: true;
   }[];
-  genres: {
-    name: string;
-  }[];
-  description_raw: string;
-  publishers: {
-    name: string;
-  }[];
+  status?: string;
+};
+
+export type IAdsData = {
+  content: IGameData[];
+  pageable: {
+    pageNumber: number;
+  };
+  totalPages: number;
 };
 
 export interface LayoutProps {
@@ -29,17 +42,24 @@ export interface LayoutProps {
   title: string;
 }
 
-export type ITags = {
+export type IUser = {
   id: number;
   name: string;
-  image_background: string;
+  image: string;
+  isBlocked: boolean;
 };
 
-export type IAds = {
-  id: number;
-  slug: string;
-  name: string;
-  playtime: number;
-  metacritic: number;
-  background_image: string;
+export type RequestBody = {
+  key: string;
+  page?: number;
+  value: number[] | number | string[] | string;
+  status?: string;
+};
+export type IStackImages = {
+  original: string;
+  thumbnail: string;
+};
+export type IBookmarkData = {
+  ad: IGameData;
+  bookmarkId: number;
 };

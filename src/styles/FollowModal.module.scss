@@ -1,0 +1,58 @@
+.main {
+  div {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  h2 {
+    font-size: 32px;
+    text-align: center;
+    color: white;
+  }
+  input {
+    color: white;
+    background-color: #5e5c5c;
+    padding: 5px 5px;
+    outline: none;
+    border: none;
+    width: 250px;
+    margin-left: 10px;
+  }
+  ul {
+    max-height: 235px;
+    overflow-y: scroll;
+    margin-top: 20px;
+    list-style: none;
+    padding-right: 15px;
+    li {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      div {
+        display: flex;
+        align-items: center;
+        p {
+          margin-left: 10px;
+          color: white;
+        }
+      }
+      justify-content: space-between;
+      img {
+        border-radius: 10px;
+      }
+    }
+    button {
+      z-index: 9999;
+      font-size: 14px;
+      padding: 5px 20px;
+    }
+  }
+}
+.button {
+  cursor: pointer;
+  position: absolute;
+  font-size: 20px;
+  padding: 5px 10px;
+  bottom: 335px;
+  left: 317px;
+}

@@ -1,6 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable import/no-extraneous-dependencies */
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { LayoutProps } from '@/helper/Types/game';
+
 import Head from 'next/head';
 
 export default function Layout({ children, title }: LayoutProps) {

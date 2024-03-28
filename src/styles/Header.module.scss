@@ -12,6 +12,15 @@
     margin-left: 45px;
   }
 }
+.block_header_user {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  > *:not(:first-child) {
+    margin-left: 45px;
+  }
+}
 .link {
   font-size: 16px;
   text-transform: uppercase;
@@ -30,12 +39,29 @@
   border: none;
   text-align: center;
 }
+.burger_button_user {
+  background-color: transparent;
+  border: none;
+  text-align: center;
+}
 .add_button {
   background-color: #2f2f2f;
   padding: 10px 20px;
   border-radius: 30px;
   text-align: center;
   font-weight: bold;
+}
+.block {
+  display: block;
+}
+.none {
+  display: none;
+}
+.none_one {
+  display: none;
+}
+.none_two {
+  display: none;
 }
 .user_ico {
   cursor: pointer;
@@ -84,6 +110,11 @@
       margin-left: 15px;
     }
   }
+  .block_header_user {
+    > *:nth-child(1) {
+      font-size: 14px;
+    }
+  }
   .link {
     font-size: 14px;
     text-transform: uppercase;
@@ -116,6 +147,11 @@
     }
   }
   .burger_button {
+    background-color: transparent;
+    border: none;
+    text-align: center;
+  }
+  .burger_button_user {
     background-color: transparent;
     border: none;
     text-align: center;

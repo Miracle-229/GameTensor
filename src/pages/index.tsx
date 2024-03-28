@@ -1,21 +1,16 @@
 import CardAds from '@/components/CardAds';
-import CardTag from '@/components/CardTag';
-import { IAds, ITags } from '@/helper/Types/game';
+import { IAdsData } from '@/helper/Types/game';
 import Layout from '@/layouts/Layout';
 import { getAdsAction } from '@/store/ads/adsThunk';
-import { wrapper } from '@/store/store';
-import { getTagsAction } from '@/store/tags/tagsThunk';
+import { getCurrentUserAction } from '@/store/currentUser/currentUserThunk';
+import { AppDispatch, wrapper } from '@/store/store';
 import style from '@/styles/Home.module.scss';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
-export default function Home({
-  tagsData,
-  adsData,
-}: {
-  tagsData: ITags[];
-  adsData: IAds[];
-}) {
+export default function Home({ adsData }: { adsData: IAdsData }) {
+  const dispatch = useDispatch<AppDispatch>();
   // для проверки на netrwork
   // const dispatch = useDispatch<AppDispatch>();
   // useEffect(() => {
@@ -29,6 +24,10 @@ export default function Home({
   //     });
   // }, []);
   // для проверки на netrwork
+  useEffect(() => {
+    dispatch(getCurrentUserAction());
+  }, [dispatch]);
+  console.log(adsData);
   return (
     <Layout title="GameTensor">
       <div className={style.home}>
@@ -44,14 +43,6 @@ export default function Home({
             alt="GameTensor"
           />
         </div>
-        <div style={{ marginTop: '100px' }}>
-          <h3 className={style.h3}>Popular tags</h3>
-          <div className={style.tags_main}>
-            {tagsData.slice(0, 5).map((data) => (
-              <CardTag key={data.id} dataTags={data} />
-            ))}
-          </div>
-        </div>
         <div
           style={{
             marginTop: '100px',
@@ -62,10 +53,8 @@ export default function Home({
         >
           <h3 className={style.h3}>Trending advertisements</h3>
           <div className={style.ads_main}>
-            {adsData.slice(0, 6).map((data) => (
-              <Link href={`/${data.id}`} key={data.id}>
-                <CardAds adsData={data} />
-              </Link>
+            {adsData.content.slice(0, 6).map((data) => (
+              <CardAds key={data.adId} adsData={data} />
             ))}
           </div>
         </div>
@@ -77,17 +66,13 @@ export default function Home({
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async () => {
     try {
-      const [tagsRes, adsRes] = await Promise.all([
-        store.dispatch(getTagsAction()),
-        store.dispatch(getAdsAction()),
+      const [adsRes] = await Promise.all([
+        store.dispatch(getAdsAction({ value: [], key: 'tags.tagId' })),
+        // store.dispatch(getBookmarkAction()),
       ]);
-      const [tagsData, adsData] = await Promise.all([
-        tagsRes.payload,
-        adsRes.payload,
-      ]);
+      const [adsData] = await Promise.all([adsRes.payload]);
       return {
         props: {
-          tagsData,
           adsData,
         },
       };
@@ -95,7 +80,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
       console.error('Error fetching data:', error);
       return {
         props: {
-          tagsData: [],
           adsData: [],
         },
       };

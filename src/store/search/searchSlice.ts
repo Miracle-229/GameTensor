@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 
-'use client';
-
 import { createAction, createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
 import { IGameData } from '@/helper/Types/game';

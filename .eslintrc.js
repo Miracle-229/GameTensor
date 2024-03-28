@@ -9,6 +9,7 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
+    'import/no-named-as-default': 0,
     'prettier/prettier': [
       'error',
       {

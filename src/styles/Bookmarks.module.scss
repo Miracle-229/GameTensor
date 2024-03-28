@@ -1,0 +1,18 @@
+.main {
+  padding: 30px 70px;
+  h1 {
+    font-size: 36px;
+    border-bottom: 1px solid white;
+    display: inline-block;
+    padding-bottom: 5px;
+  }
+}
+.ads_main {
+  display: flex;
+  max-width: 1200px;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  & > * {
+    margin-top: 40px;
+  }
+}

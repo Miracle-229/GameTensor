@@ -163,6 +163,12 @@ padding: 3px 5px;
 display: flex;
 align-items: center;
 }
+.image-gallery-image{
+    width: 500px;
+  height: 400px;
+object-fit: cover !important;
+}
+
 .image-gallery-svg{
   width: 30px !important;
 }
@@ -178,6 +184,7 @@ align-items: center;
    width: 150px;
    height: 90px;
 }
+
 
 @media (max-width: 1024px) {
   input.rbt-input-main.form-control.rbt-input {
