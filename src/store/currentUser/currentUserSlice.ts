@@ -25,7 +25,7 @@ const initialState: CurrentUserState = {
 };
 
 export const currentUserSlice = createSlice({
-  name: 'ads',
+  name: 'currentUser',
   initialState,
   reducers: {},
   extraReducers: (builder) => {

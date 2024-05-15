@@ -10,28 +10,40 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/store/store';
 import { adsData } from '@/store/ads/adsSelector';
 import { getAdsAction } from '@/store/ads/adsThunk';
+import { patchStatusAdAction } from '@/store/patchStatusAd/patchStatusSelectorAd';
 
 function Approve() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const dataAds = useSelector(adsData);
   const dispatch = useDispatch<AppDispatch>();
-  const [statusFilter, setStatusFilter] = useState('all');
-  console.log(dataAds);
+  const [statusFilter, setStatusFilter] = useState('CREATED');
+
+  console.log(currentPage);
+
   useEffect(() => {
-    dispatch(getAdsAction({ value: [], key: 'tags.tagId', page: currentPage }));
-  }, [dispatch, currentPage]);
+    dispatch(getAdsAction({ status: statusFilter, page: currentPage }));
+  }, [dispatch, currentPage, statusFilter]);
 
   const filteredAds = dataAds.content.filter(
     (ad: IGameData) =>
       ad.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (statusFilter === 'all' || ad.status === statusFilter) // Include status filter
+      (statusFilter === 'CREATED' || ad.status === statusFilter) // Include status filter
   );
 
   const changeStatus = (newStatus: string) => {
     setStatusFilter(newStatus);
     setCurrentPage(0);
-    dispatch(getAdsAction({ value: [], key: 'tags.tagId', page: 0 }));
+    dispatch(getAdsAction({ status: newStatus, page: currentPage }));
+  };
+
+  const changeAdStatus = async (
+    event: React.ChangeEvent<HTMLSelectElement>,
+    adId: number
+  ) => {
+    const newStatus = event.target.value;
+    await dispatch(patchStatusAdAction({ key: newStatus, id: adId }));
+    dispatch(getAdsAction({ status: statusFilter, page: currentPage }));
   };
 
   const handlePageChange = (page: number) => {
@@ -86,10 +98,10 @@ function Approve() {
             value={statusFilter}
             onChange={(e) => changeStatus(e.target.value)}
           >
-            <option value="all">All</option>
             <option value="CREATED">New</option>
             <option value="APPROVED">Approved</option>
             <option value="BLOCKED">Blocked</option>
+            <option value="CLOSED">Deleted</option>
           </select>
         </div>
         <div className={style.ads} id="scrollableDiv">
@@ -101,12 +113,18 @@ function Approve() {
                     ? 'CREATED'
                     : data.status === 'APPROVED'
                       ? 'APPROVED'
-                      : 'BLOCKED'
+                      : data.status === 'BLOCKED'
+                        ? 'BLOCKED'
+                        : data.status === 'CLOSED'
+                          ? 'CLOSED'
+                          : 'BLOCKED'
                 }
+                onChange={(e) => changeAdStatus(e, data.adId)}
               >
                 <option value="CREATED">New</option>
                 <option value="APPROVED">Approved</option>
                 <option value="BLOCKED">Blocked</option>
+                <option value="CLOSED">Deleted</option>
               </select>
               <CardAds adsData={data} />
             </div>

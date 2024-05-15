@@ -3,10 +3,27 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { LayoutProps } from '@/helper/Types/game';
-
+import { getCurrentUserAction } from '@/store/currentUser/currentUserThunk';
+import { getNotifCountAction } from '@/store/getNotifCount/getNotifCountThunk';
+import { AppDispatch } from '@/store/store';
 import Head from 'next/head';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 export default function Layout({ children, title }: LayoutProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      await dispatch(getCurrentUserAction());
+    };
+    fetchCurrentUser();
+  }, [dispatch]);
+  useEffect(() => {
+    const fetchNotifCount = async () => {
+      await dispatch(getNotifCountAction());
+    };
+    fetchNotifCount();
+  }, [dispatch]);
   return (
     <>
       <Head>

@@ -14,7 +14,11 @@ function TagsSearch({ selected, tags }: { selected?: ITags[]; tags: ITags[] }) {
   const [tagsLoad, setTagsLoad] = useState(false);
 
   useEffect(() => {
-    dispatch(getAdsAction({ value: selectedItems, key: 'tags.tagId' }));
+    if (selectedItems.length > 0) {
+      dispatch(getAdsAction({ value: selectedItems, key: 'tags.tagId' }));
+    } else {
+      dispatch(getAdsAction({ status: 'APPROVED' }));
+    }
     localStorage.setItem('selectedTags', selectedItems.join(','));
     if (selected && !tagsLoad) {
       const selectedIds = selected.map((item) => item.tagId);

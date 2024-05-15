@@ -10,14 +10,26 @@ import { adsData } from '@/store/ads/adsSelector';
 import { AppDispatch, wrapper } from '@/store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAdsAction } from '@/store/ads/adsThunk';
+import { TbFileSad } from 'react-icons/tb';
+import { getCookie } from 'cookies-next';
+import { getBookmarkAction } from '@/store/getBookmark/getBookmarkThunk';
 
 function Advertisements({ tagsData }: { tagsData: ITags[] }) {
+  const user = getCookie('user');
+  const [isBookmarkLoaded, setIsBookmarkLoaded] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const dataAds = useSelector(adsData);
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    dispatch(getAdsAction({ value: [], key: 'tags.tagId', page: currentPage }));
+    dispatch(getAdsAction({ page: currentPage }));
   }, [dispatch, currentPage]);
+
+  useEffect(() => {
+    if (user && !isBookmarkLoaded) {
+      dispatch(getBookmarkAction());
+      setIsBookmarkLoaded(true);
+    }
+  }, [dispatch, user, isBookmarkLoaded]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -57,9 +69,15 @@ function Advertisements({ tagsData }: { tagsData: ITags[] }) {
         <div className={style.content}>
           <TagsSearch tags={tagsData} />
           <div className={style.ads_main}>
-            {dataAds.content.map((data) => (
-              <CardAds key={data.adId} adsData={data} />
-            ))}
+            {dataAds.content.length > 0 ? (
+              dataAds.content.map((data) => (
+                <CardAds key={data.adId} adsData={data} />
+              ))
+            ) : (
+              <p style={{ fontSize: '45px', width: '100%' }}>
+                Not found <TbFileSad />
+              </p>
+            )}
           </div>
         </div>
         {dataAds.totalPages > 0 && renderPagination()}

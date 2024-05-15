@@ -8,12 +8,14 @@ import TagsSearch from '@/components/TagsSearch';
 import { IGameData, ITags } from '@/helper/Types/game';
 import { AppDispatch, wrapper } from '@/store/store';
 import { getTagsAction } from '@/store/tags/tagsThunk';
-import api from '@/interceptors/api';
 import { GetServerSidePropsContext } from 'next';
 import { getIdAction } from '@/store/id/idThunk';
 import { useDispatch } from 'react-redux';
 import { getImageIdAction } from '@/store/imageId/imageThunk';
 import { useRouter } from 'next/router';
+import { editAdAction } from '@/store/editAd/editAdThunk';
+import Alert from '@/components/Alert';
+import { useAlert } from '@/helper/alertHooks';
 
 interface IMedia {
   file: File;
@@ -37,6 +39,7 @@ export default function Edit({
   const [price, setPrice] = useState(gameData.price);
   const inputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const { visibleError, showAlertError, hideAlertError } = useAlert();
   useEffect(() => {
     const fetchImages = async () => {
       const promises = gameData.medias.map((result) =>
@@ -85,17 +88,26 @@ export default function Edit({
   const handleRemoveImage = (index: number) => {
     setMedia((prevMedia) => prevMedia.filter((_, i) => i !== index));
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-    setRemovedImageIds((prevIds) => [...prevIds, media[index].amId]);
+    setRemovedImageIds((prevIds) => {
+      if (!prevIds.includes(media[index].amId)) {
+        return [...prevIds, media[index].amId];
+      }
+      return prevIds;
+    });
     if (inputRef.current) {
       inputRef.current.value = '';
     }
   };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Фильтрация изображений, исключая удаленные
+    const imagesToSend = images.filter((_, index) =>
+      removedImageIds.includes(media[index].amId)
+    );
+
     const formData = new FormData();
-    images.forEach((image) => {
+    imagesToSend.forEach((image) => {
       formData.append('files', image);
     });
     formData.append('title', title);
@@ -113,15 +125,10 @@ export default function Edit({
     formData.append('price', price);
 
     try {
-      const response = await api.put('ad', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      localStorage.removeItem('selectedTags');
-      console.log(response.data);
+      await dispatch(editAdAction(formData));
+      router.push(`/ad/${adId}`);
     } catch (error) {
-      console.error('Error uploading file:', error);
+      showAlertError();
     }
   };
 
@@ -194,6 +201,12 @@ export default function Edit({
           <button type="submit">Update advertisements</button>
         </form>
       </div>
+      <Alert
+        type="error"
+        message="Error to edit ad"
+        visible={visibleError}
+        onClose={hideAlertError}
+      />
     </Layout>
   );
 }

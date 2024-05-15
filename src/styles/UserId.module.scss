@@ -38,7 +38,7 @@
   }
 }
 .input {
-  margin-top: 40px;
+  margin-top: 20px;
   display: flex;
   align-items: center;
   input {
@@ -56,6 +56,46 @@
   display: grid;
   grid-template-columns: 3fr 3fr 3fr 3fr;
   row-gap: 40px;
+}
+.tabs {
+  margin-top: 25px;
+  display: flex;
+  justify-content: space-evenly;
+}
+.tab {
+  background-color: transparent;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+}
+.tab_active {
+  background-color: transparent;
+  border: none;
+  font-size: 28px;
+  border-bottom: 3px solid white;
+  padding-bottom: 5px;
+  cursor: pointer;
+}
+.adiId_buttons {
+  display: flex;
+  justify-content: space-between;
+  max-width: 265px;
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+}
+.chat {
+  margin-top: 20px;
+  background-color: #2f2f2f !important;
+  border: none;
+  color: white !important;
+  padding: 5px 60px;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (max-width: 1024px) {
@@ -91,6 +131,12 @@
   .profile {
     width: 350px;
   }
+  .tab {
+    font-size: 24px;
+  }
+  .tab_active {
+    font-size: 24px;
+  }
 }
 @media (max-width: 361px) {
   .main {
@@ -109,5 +155,11 @@
     button {
       font-size: 14px;
     }
+  }
+  .tab {
+    font-size: 22px;
+  }
+  .tab_active {
+    font-size: 22px;
   }
 }

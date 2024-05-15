@@ -2,38 +2,35 @@
 import RegistrationLayout from '@/layouts/RegistrationLayout';
 import React, { useState } from 'react';
 import style from '@/styles/Registration.module.scss';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store/store';
 import { registrationAction } from '@/store/registration/registrationThunk';
 import { useRouter } from 'next/router';
+import Alert from '@/components/Alert';
+import { useAlert } from '@/helper/alertHooks';
 
 function Registration() {
-  const [, setImage] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setImage(file);
-      setImageUrl(URL.createObjectURL(file));
-    }
-  };
+  const { visibleError, showAlertError, hideAlertError } = useAlert();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await dispatch(registrationAction({ login, email, password }));
+      const response = await dispatch(
+        registrationAction({ login, email, password })
+      );
+      if (response.type === 'registration/rejected') {
+        showAlertError();
+        return;
+      }
       router.push('/');
-      console.log('Registration successful');
     } catch (error) {
-      console.error('Registration failed:', error);
+      showAlertError();
     }
   };
   return (
@@ -69,25 +66,18 @@ function Registration() {
             type="password"
           />
           <input required placeholder="Repeat password" type="password" />
-          {imageUrl && (
-            <Image width={100} height={100} src={imageUrl} alt="Uploaded" />
-          )}
-          <div className="custom-file-upload">
-            <input
-              type="file"
-              id="upload-image"
-              accept="image/*"
-              onChange={handleImageChange}
-              className={style.noinput}
-            />
-            <label htmlFor="upload-image">Upload Image</label>
-          </div>
           <button type="submit">Enter</button>
         </form>
         <Link className={style.link} href="/login">
           You have already account? Login
         </Link>
       </div>
+      <Alert
+        type="error"
+        message="Error to registration (This username or email address is already occupied)"
+        visible={visibleError}
+        onClose={hideAlertError}
+      />
     </RegistrationLayout>
   );
 }

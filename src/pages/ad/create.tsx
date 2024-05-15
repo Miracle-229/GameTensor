@@ -6,12 +6,23 @@ import style from '@/styles/CreateAds.module.scss';
 import Image from 'next/image';
 import TagsSearch from '@/components/TagsSearch';
 import { ITags } from '@/helper/Types/game';
-import { wrapper } from '@/store/store';
+import { AppDispatch, wrapper } from '@/store/store';
 import { getTagsAction } from '@/store/tags/tagsThunk';
-import api from '@/interceptors/api';
+import { createAdAction } from '@/store/createAd/createAdThunk';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { currentUserData } from '@/store/currentUser/currentUserSelector';
+import { useAlert } from '@/helper/alertHooks';
+import Alert from '@/components/Alert';
 
 export default function Create({ tagsData }: { tagsData: ITags[] }) {
+  const dispatch = useDispatch<AppDispatch>();
+  const { visibleError, showAlertError, hideAlertError } = useAlert();
+  const userData = useSelector(currentUserData);
+  const { login } = userData;
+  const router = useRouter();
   const [images, setImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -27,6 +38,18 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
       }
 
       setImages((prevImages) => [...prevImages, ...selectedImages]);
+
+      // Обработка предварительного просмотра изображений
+      selectedImages.forEach((image) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreviews((prevPreviews) => [
+            ...prevPreviews,
+            reader.result as string,
+          ]);
+        };
+        reader.readAsDataURL(image);
+      });
     }
   };
 
@@ -47,21 +70,17 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
     formData.append('title', title);
     formData.append('description', description);
     const tags = localStorage.getItem('selectedTags');
+
     if (tags !== null) {
       formData.append('tags', tags);
     }
     formData.append('price', price);
 
     try {
-      const response = await api.post('ad', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      localStorage.removeItem('selectedTags');
-      console.log(response.data);
+      await dispatch(createAdAction(formData));
+      router.push(`/user/${login}`);
     } catch (error) {
-      console.error('Error uploading file:', error);
+      showAlertError();
     }
   };
 
@@ -78,7 +97,7 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
                   <Image
                     width={100}
                     height={100}
-                    src={URL.createObjectURL(image)}
+                    src={imagePreviews[index]}
                     alt={`Uploaded ${index + 1}`}
                     style={{ maxWidth: '200px', maxHeight: '200px' }}
                   />
@@ -134,6 +153,12 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
           <button type="submit">Create advertisements</button>
         </form>
       </div>
+      <Alert
+        type="error"
+        message="Error to create ad"
+        visible={visibleError}
+        onClose={hideAlertError}
+      />
     </Layout>
   );
 }

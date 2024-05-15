@@ -19,7 +19,7 @@ export const searchGamesAction = createAsyncThunk(
         'ad?page=0&sort=creationDate,desc',
         requestBody
       );
-      const data = await response.data;
+      const data = await response.data.content;
       // console.log(response.data);
       const parsedData = data.map((game: IGameData) => ({
         medias: game.medias.map((media) => ({

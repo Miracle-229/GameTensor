@@ -4,19 +4,20 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 export const getAdsAction = createAsyncThunk(
   'getAd',
-  async ({ value = [], key, page = 0, status = '' }: RequestBody) => {
+  async ({ value, key, page = 0, status = 'APPROVED' }: RequestBody) => {
     try {
       let requestBody: RequestBody[] = [];
-      if (Array.isArray(value)) {
-        if (value.length > 0) {
-          requestBody = [
-            {
-              key,
-              value,
-              status,
-            },
-          ];
-        }
+      requestBody = [
+        {
+          key: 'status',
+          value: status,
+        },
+      ];
+      if (key && value) {
+        requestBody.push({
+          key,
+          value,
+        });
       }
       const response = await api.post(
         `ad?page=${page}&size=9&sort=creationDate,desc`,

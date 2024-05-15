@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable import/no-extraneous-dependencies */
 import Layout from '@/layouts/Layout';
 import React, { useEffect, useState } from 'react';
@@ -11,17 +12,18 @@ import Link from 'next/link';
 import { AppDispatch, wrapper } from '@/store/store';
 import { GetServerSidePropsContext } from 'next';
 import { getIdAction } from '@/store/id/idThunk';
-// import { images } from '@/helper/Constants/images_id';
 import { IGameData } from '@/helper/Types/game';
 import { useDispatch, useSelector } from 'react-redux';
 import { getImageIdAction } from '@/store/imageId/imageThunk';
-import {
-  bookmarkData,
-  bookmarkStatus,
-} from '@/store/getBookmark/getBookmarkSelector';
+import { bookmarkData } from '@/store/getBookmark/getBookmarkSelector';
 import { postBookmarkAction } from '@/store/postBookmark/postBookmarkThunk';
 import { getBookmarkAction } from '@/store/getBookmark/getBookmarkThunk';
 import { deleteBookmarkAction } from '@/store/deleteBookmark/deleteBookmarkThunk';
+import { getCookie } from 'cookies-next';
+import { useAlert } from '@/helper/alertHooks';
+import Alert from '@/components/Alert';
+import { currentUserData } from '@/store/currentUser/currentUserSelector';
+import { createChatAction } from '@/store/createChat/createChatThunk';
 
 interface Image {
   original: string;
@@ -29,11 +31,28 @@ interface Image {
 }
 
 export default function IdGamePage({ game }: { game: IGameData }) {
+  const user = getCookie('user');
+  const [isClient, setIsClient] = useState<boolean>(false);
+  const userData = useSelector(currentUserData);
+  const { login } = userData;
+  const [isBookmarkLoaded, setIsBookmarkLoaded] = useState(false);
   const [images, setImages] = useState<Image[]>([]);
   const [index, setIndex] = useState(0);
   const dispatch = useDispatch<AppDispatch>();
   const bookmark = useSelector(bookmarkData);
-  const bookmarkCheck = useSelector(bookmarkStatus);
+  const { visibleError, showAlertError, hideAlertError } = useAlert();
+
+  const handleChatClick = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    if (!user) {
+      event.preventDefault();
+      showAlertError();
+    } else if (typeof game.user.userId === 'string') {
+      dispatch(createChatAction(game.user.userId));
+    }
+  };
+
   useEffect(() => {
     const fetchImages = async () => {
       const promises = game.medias.map((media) =>
@@ -49,6 +68,9 @@ export default function IdGamePage({ game }: { game: IGameData }) {
 
     fetchImages();
   }, [dispatch, game]);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const setBookmark = async () => {
     await dispatch(postBookmarkAction(game.adId));
     dispatch(getBookmarkAction());
@@ -61,10 +83,11 @@ export default function IdGamePage({ game }: { game: IGameData }) {
     dispatch(getBookmarkAction());
   };
   useEffect(() => {
-    if (bookmarkCheck !== 'succeeded') {
+    if (!isBookmarkLoaded) {
       dispatch(getBookmarkAction());
+      setIsBookmarkLoaded(true);
     }
-  }, [dispatch, bookmarkCheck, bookmark]);
+  }, [dispatch, isBookmarkLoaded, bookmark]);
   const isBookmarked = bookmark.some((item) => item.ad.adId === game.adId);
 
   // для проверки на netrwork
@@ -112,22 +135,26 @@ export default function IdGamePage({ game }: { game: IGameData }) {
           />
         </div>
         <div className={style.inf_block}>
-          <h4>{game.price}$</h4>
-          <h3>{game.title}</h3>
+          <div style={{ display: 'flex' }}>
+            <span className={style.overview}>Price:</span>
+            <p style={{ marginLeft: '5px', padding: '0px' }}>{game.price}$</p>
+          </div>
+          <div style={{ display: 'flex' }}>
+            <span className={style.overview}>Title:</span>
+            <p style={{ marginLeft: '5px', padding: '0px' }}>{game.title}</p>
+          </div>
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
             }}
           >
-            <Image
-              src="/ava.jpg"
-              width={50}
-              height={50}
-              className={style.user_img}
-              alt="avatar"
-            />
-            <h5 style={{ marginLeft: '20px' }}>{game.user.login}</h5>
+            <div style={{ display: 'flex' }}>
+              <span className={style.overview}>Seller:</span>
+              <p style={{ marginLeft: '5px', padding: '0px' }}>
+                {game.user.login}
+              </p>
+            </div>
           </div>
           <div style={{ display: 'flex' }}>
             <span className={style.overview}>Tags:</span>
@@ -138,33 +165,46 @@ export default function IdGamePage({ game }: { game: IGameData }) {
             ))}
           </div>
           <div className={style.chat_row}>
-            <Link className={style.chat} href="/">
-              <IoMdChatbubbles size={25} /> Chat
-            </Link>
-            {isBookmarked ? (
-              <button
-                style={{
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-                type="button"
-                onClick={unsetBookmark}
+            {login !== game.user.login && (
+              <Link
+                className={style.chat}
+                onClick={handleChatClick}
+                href="/chat"
               >
-                <FaBookmark size={35} />
-              </button>
+                <IoMdChatbubbles size={25} /> Chat
+              </Link>
+            )}
+
+            {user && isClient ? (
+              <>
+                {isBookmarked ? (
+                  <button
+                    style={{
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                    type="button"
+                    onClick={unsetBookmark}
+                  >
+                    <FaBookmark size={35} className={style.icon} />
+                  </button>
+                ) : (
+                  <button
+                    style={{
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                    type="button"
+                    onClick={setBookmark}
+                  >
+                    <FaRegBookmark size={35} className={style.icon} />
+                  </button>
+                )}
+              </>
             ) : (
-              <button
-                style={{
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-                type="button"
-                onClick={setBookmark}
-              >
-                <FaRegBookmark size={35} />
-              </button>
+              <div />
             )}
           </div>
         </div>
@@ -173,6 +213,12 @@ export default function IdGamePage({ game }: { game: IGameData }) {
         <h3>Overview</h3>
         <p>{game.description}</p>
       </div>
+      <Alert
+        type="error"
+        message="Not authorized"
+        visible={visibleError}
+        onClose={hideAlertError}
+      />
     </Layout>
   );
 }

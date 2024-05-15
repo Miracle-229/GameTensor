@@ -12,6 +12,7 @@ const nextConfig = {
     API_URL: process.env.API_URL,
     API_KEY: process.env.API_KEY,
     LOCAL_URL: process.env.LOCAL_URL,
+    WS_URL: process.env.WS_URL,
   },
 };
 

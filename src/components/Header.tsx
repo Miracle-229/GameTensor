@@ -2,7 +2,7 @@
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import style from '@/styles/Header.module.scss';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,13 +22,19 @@ import { currentUserData } from '@/store/currentUser/currentUserSelector';
 import { getCookie } from 'cookies-next';
 import { AppDispatch } from '@/store/store';
 import { logoutAction } from '@/store/logout/logoutThunk';
+import { useRouter } from 'next/router';
+import { notifCountData } from '@/store/getNotifCount/getNotifCountSelector';
 import Search from './Search';
 
 function Header() {
   const user = getCookie('user');
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const userData = useSelector(currentUserData);
-  const { userId } = userData;
+  const notifCount = useSelector(notifCountData);
+  const headerRef = useRef(null);
+  const loginFromQuery = router.query.login as string;
+  const { login, status } = userData;
   const addAdvertisementLink = user ? '/ad/create' : '/registration';
   const [showUser, setShowUser] = useState<boolean>(false);
   const [showNot, setShowNot] = useState<boolean>(false);
@@ -66,6 +72,7 @@ function Header() {
     setMenu(false);
     setShowUser(false);
   };
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -77,11 +84,29 @@ function Header() {
     setMenu(false);
     setShowUser(false);
     setShowNot(false);
+    router.push('/');
   };
+  const handleOutsideClick = (event) => {
+    if (headerRef.current && !headerRef.current.contains(event.target)) {
+      setMenu(false);
+      setShowUser(false);
+      setShowNot(false);
+    }
+  };
+
+  useEffect(() => {
+    // Добавляем обработчик клика при монтировании компонента
+    document.addEventListener('click', handleOutsideClick);
+
+    // Удаляем обработчик клика при размонтировании компонента
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
   const { width, height } = getSize(isLaptop, isTablet, isPhone);
   return (
     <>
-      <header className={style.header}>
+      <header ref={headerRef} className={style.header}>
         {showMenu ? (
           <>
             <div className={style.search}>
@@ -97,6 +122,7 @@ function Header() {
             </div>
             <div className={style.block_header_user}>
               <button
+                // ref={notRef}
                 onClick={openNot}
                 className={`${user ? style.burger_button : style.none}`}
                 type="button"
@@ -142,9 +168,11 @@ function Header() {
               </div>
             </div>
             <div className={style.block_header_user}>
-              <Link className={style.add_button} href={addAdvertisementLink}>
-                Add advertisements
-              </Link>
+              {status === 'ACTIVE' && (
+                <Link className={style.add_button} href={addAdvertisementLink}>
+                  Add advertisements
+                </Link>
+              )}
               {user && isClient && (
                 <button
                   onClick={openNot}
@@ -187,16 +215,24 @@ function Header() {
               <Link className={style.link} href="/user/settings">
                 <MdContacts size={20} /> Settings account
               </Link>
-              <Link className={style.link} href={`/user/${userId}`}>
-                <MdDashboard size={20} /> My advertisements
-              </Link>
+              {login !== loginFromQuery ? (
+                <Link className={style.link} href={`/user/${login}`}>
+                  <MdDashboard size={20} /> My advertisements
+                </Link>
+              ) : (
+                <div className={style.link}>
+                  <MdDashboard size={20} /> My advertisements
+                </div>
+              )}
               <Link className={style.link} href="/bookmarks">
                 <FaBookmark size={20} /> Bookmarks
               </Link>
-              <Link className={style.link} href="/">
-                <IoMdChatbubbles size={20} />
-                Chat
-              </Link>
+              {status === 'ACTIVE' && (
+                <Link className={style.link} href="/chat">
+                  <IoMdChatbubbles size={20} />
+                  Chat
+                </Link>
+              )}
               <Link onClick={logout} className={style.link} href="/">
                 <FaDoorOpen size={20} />
                 Exit
@@ -215,11 +251,22 @@ function Header() {
         </div>
       )}
       {showNot && (
-        <div className={style.menu_user}>
-          <Link className={style.link} href="/">
-            <p>There are no notifications yet</p>
-          </Link>
-        </div>
+        <>
+          {status === 'ACTIVE' && (
+            <div className={style.menu_user}>
+              <Link className={style.link} href="/">
+                <p>There are no notifications yet</p>
+              </Link>
+            </div>
+          )}
+          {status === 'BLOCKED' && (
+            <div className={style.menu_user}>
+              <Link className={style.link} href="/">
+                <p>Your account is blocked</p>
+              </Link>
+            </div>
+          )}
+        </>
       )}
     </>
   );

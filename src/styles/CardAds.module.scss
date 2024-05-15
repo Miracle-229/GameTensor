@@ -8,7 +8,7 @@
   border-radius: 30px;
 }
 .ads_inf_main {
-  padding: 10px 15px 0px 15px;
+  padding: 10px 15px 15px 15px;
 }
 .active {
   display: flex;
@@ -19,6 +19,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  h3{
+    margin-top: 10px !important;
+  }
 }
 .icon {
   font-size: 30px;

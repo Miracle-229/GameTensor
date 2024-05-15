@@ -1,10 +1,12 @@
 export type IAuth = {
   login: string;
   password?: string;
-  userId?: number;
+  userId?: number | string;
   email?: string;
   accessToken?: string;
   refreshToken?: string;
+  status?: string;
+  subscribers?: IAuth[];
 };
 
 export type ITags = {
@@ -50,9 +52,9 @@ export type IUser = {
 };
 
 export type RequestBody = {
-  key: string;
+  key?: string;
   page?: number;
-  value: number[] | number | string[] | string;
+  value?: number[] | number | string[] | string;
   status?: string;
 };
 export type IStackImages = {
@@ -63,3 +65,33 @@ export type IBookmarkData = {
   ad: IGameData;
   bookmarkId: number;
 };
+
+export type IStatusData = {
+  id: number;
+  key: string;
+};
+export type AdFormData = {
+  image: File[];
+  title: string;
+  tags: string;
+  description: string;
+  price: number;
+};
+
+export type IChats = {
+  chatId: string;
+  name: string;
+  lastMessage: {
+    text: string;
+    isRead: boolean;
+  };
+  users: IAuth[];
+}[];
+
+export type IMessages = {
+  date: string;
+  isChanged: boolean;
+  isRead: boolean;
+  text: string;
+  user: IAuth;
+}[];
