@@ -9,26 +9,39 @@ import { getMessagesAction } from './getMessagesThunk';
 const hydrate = createAction<AppState>(HYDRATE);
 
 type CurrentUserState = {
-  data: IMessages;
+  data: {
+    content: IMessages[];
+    pageable: {
+      pageNumber: number;
+    };
+    totalPages: number;
+  };
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 };
 
 const initialState: CurrentUserState = {
-  data: [
-    {
-      date: '',
-      isChanged: false,
-      isRead: false,
-      text: '',
-      user: {
-        email: '',
-        login: '',
-        status: '',
-        userId: '',
+  data: {
+    content: [
+      {
+        date: '',
+        chatId: '',
+        isChanged: false,
+        isRead: false,
+        text: '',
+        user: {
+          email: '',
+          login: '',
+          status: '',
+          userId: 0,
+        },
       },
+    ],
+    pageable: {
+      pageNumber: 0,
     },
-  ],
+    totalPages: 0,
+  },
   status: 'idle',
   error: null,
 };

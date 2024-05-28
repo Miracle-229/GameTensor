@@ -120,19 +120,23 @@ export default function IdGamePage({ game }: { game: IGameData }) {
     <Layout title={`${game.title}`}>
       <div className={style.main}>
         <div className={style.img_block}>
-          <ImageGallery
-            items={images}
-            startIndex={index}
-            showIndex
-            lazyLoad
-            showThumbnails
-            useTranslate3D={false}
-            showPlayButton={false}
-            showBullets={false}
-            thumbnailPosition="bottom"
-            slideInterval={2000}
-            onSlide={(number) => setIndex(number)}
-          />
+          {images.length > 0 ? (
+            <ImageGallery
+              items={images}
+              startIndex={index}
+              showIndex
+              lazyLoad
+              showThumbnails
+              useTranslate3D={false}
+              showPlayButton={false}
+              showBullets={false}
+              thumbnailPosition="bottom"
+              slideInterval={2000}
+              onSlide={(number) => setIndex(number)}
+            />
+          ) : (
+            <Image width={650} height={350} src="/noimage.jpg" alt="noImage" />
+          )}
         </div>
         <div className={style.inf_block}>
           <div style={{ display: 'flex' }}>

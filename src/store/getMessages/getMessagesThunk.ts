@@ -3,9 +3,9 @@ import api from '@/interceptors/api';
 
 export const getMessagesAction = createAsyncThunk(
   'getMessages',
-  async (id: string) => {
+  async ({ id, page }: { id: string; page?: number }) => {
     try {
-      const response = await api.get(`chat/message?chatId=${id}`);
+      const response = await api.get(`chat/message?page=${page}&chatId=${id}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching get current user:', error);

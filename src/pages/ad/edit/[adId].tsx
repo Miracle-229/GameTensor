@@ -31,15 +31,18 @@ export default function Edit({
 }) {
   const router = useRouter();
   const { adId } = router.query;
-  const [images, setImages] = useState<File[]>([]);
-  const [media, setMedia] = useState<IMedia[]>([]);
+  const [, setImages] = useState<File[]>([]);
+  const [existingMedia, setExistingMedia] = useState<IMedia[]>([]);
+  const [newMedia, setNewMedia] = useState<IMedia[]>([]);
   const [removedImageIds, setRemovedImageIds] = useState<string[]>([]);
   const [title, setTitle] = useState(gameData.title);
   const [description, setDescription] = useState(gameData.description);
   const [price, setPrice] = useState(gameData.price);
   const inputRef = useRef<HTMLInputElement>(null);
+  
   const dispatch = useDispatch<AppDispatch>();
   const { visibleError, showAlertError, hideAlertError } = useAlert();
+
   useEffect(() => {
     const fetchImages = async () => {
       const promises = gameData.medias.map((result) =>
@@ -59,7 +62,7 @@ export default function Edit({
       });
 
       const fileResults = await Promise.all(filePromises);
-      setMedia(fileResults); // Set the new state with amId
+      setExistingMedia(fileResults); // Set the existing media state
       setImages(fileResults.map((result) => result.file)); // Set the images state without amId
     };
 
@@ -69,59 +72,72 @@ export default function Edit({
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const selectedFiles = Array.from(e.target.files);
-      const totalImages = media.length + selectedFiles.length;
+      const totalImages =
+        existingMedia.length + newMedia.length + selectedFiles.length;
 
       if (totalImages > 6) {
         return;
       }
 
-      const newMedia = selectedFiles.map((file, index) => {
-        const { amId } = gameData.medias[media.length + index];
-        return { file, amId };
-      });
+      const newMediaItems = selectedFiles.map((file) => ({
+        file,
+        amId: '', // New images will have an empty amId
+      }));
 
-      setMedia((prevMedia) => [...prevMedia, ...newMedia]);
+      setNewMedia((prevNewMedia) => [...prevNewMedia, ...newMediaItems]);
       setImages((prevImages) => [...prevImages, ...selectedFiles]);
     }
   };
 
   const handleRemoveImage = (index: number) => {
-    setMedia((prevMedia) => prevMedia.filter((_, i) => i !== index));
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-    setRemovedImageIds((prevIds) => {
-      if (!prevIds.includes(media[index].amId)) {
-        return [...prevIds, media[index].amId];
+    if (index < existingMedia.length) {
+      const { amId } = existingMedia[index];
+
+      setExistingMedia((prevMedia) => prevMedia.filter((_, i) => i !== index));
+      setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+
+      if (amId) {
+        setRemovedImageIds((prevIds) => [...prevIds, amId]);
       }
-      return prevIds;
-    });
+    } else {
+      const newMediaIndex = index - existingMedia.length;
+
+      setNewMedia((prevNewMedia) =>
+        prevNewMedia.filter((_, i) => i !== newMediaIndex)
+      );
+      setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    }
+
     if (inputRef.current) {
       inputRef.current.value = '';
     }
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Фильтрация изображений, исключая удаленные
-    const imagesToSend = images.filter((_, index) =>
-      removedImageIds.includes(media[index].amId)
-    );
-
     const formData = new FormData();
-    imagesToSend.forEach((image) => {
-      formData.append('files', image);
+
+    // Append new images only
+    newMedia.forEach((mediaItem) => {
+      formData.append('files', mediaItem.file);
     });
+
     formData.append('title', title);
     if (typeof adId === 'string') {
       formData.append('adId', adId);
     } else {
       console.error('adId is not a string or is undefined');
     }
+
     formData.append('deletedImages', removedImageIds.join(','));
     formData.append('description', description);
+
     const tags = localStorage.getItem('selectedTags');
     if (tags !== null) {
       formData.append('tags', tags);
     }
+
     formData.append('price', price);
 
     try {
@@ -140,12 +156,12 @@ export default function Edit({
           <h3>Photos</h3>
           <div>
             <div className={style.row_images}>
-              {images.map((image, index) => (
+              {existingMedia.map((mediaItem, index) => (
                 <div key={index} className={style.imageContainer}>
                   <Image
                     width={100}
                     height={100}
-                    src={URL.createObjectURL(image)}
+                    src={URL.createObjectURL(mediaItem.file)}
                     alt={`Uploaded ${index + 1}`}
                     style={{ maxWidth: '200px', maxHeight: '200px' }}
                   />
@@ -158,12 +174,35 @@ export default function Edit({
                   </button>
                 </div>
               ))}
+              {newMedia.map((mediaItem, index) => (
+                <div
+                  key={existingMedia.length + index}
+                  className={style.imageContainer}
+                >
+                  <Image
+                    width={100}
+                    height={100}
+                    src={URL.createObjectURL(mediaItem.file)}
+                    alt={`Uploaded ${existingMedia.length + index + 1}`}
+                    style={{ maxWidth: '200px', maxHeight: '200px' }}
+                  />
+                  <button
+                    type="button"
+                    className={style.removeButton}
+                    onClick={() =>
+                      handleRemoveImage(existingMedia.length + index)
+                    }
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
             </div>
             <p className={style.photos_inf}>
               The maximum number of uploaded images is 6
             </p>
             <p className={style.photos_inf}>
-              Uploaded images: {images.length} / 6
+              Uploaded images: {existingMedia.length + newMedia.length} / 6
             </p>
             <div className={style.costume_input}>
               <input

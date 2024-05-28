@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import RegistrationLayout from '@/layouts/RegistrationLayout';
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import style from '@/styles/Registration.module.scss';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
@@ -17,6 +17,21 @@ function Registration() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { visibleError, showAlertError, hideAlertError } = useAlert();
+
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const trimmedLogin = e.target.value.trim().replace(/\s+/g, ' ');
+    setEmail(trimmedLogin);
+  };
+
+  const handleLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const trimmedLogin = e.target.value.trim().replace(/\s+/g, ' ');
+    setLogin(trimmedLogin);
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const trimmedPassword = e.target.value.trim().replace(/\s+/g, ' ');
+    setPassword(trimmedPassword);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,21 +61,21 @@ function Registration() {
           <h1>Registration</h1>
           <input
             value={login}
-            onChange={(e) => setLogin(e.target.value)}
+            onChange={handleLoginChange}
             required
             placeholder="Login"
             type="text"
           />
           <input
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             required
             placeholder="Email"
             type="email"
           />
           <input
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
             placeholder="Password"
             type="password"

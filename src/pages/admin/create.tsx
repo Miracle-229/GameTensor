@@ -18,6 +18,7 @@ function Create() {
     showAlertError,
     hideAlertError,
   } = useAlert();
+
   const create = () => {
     if (tagName.trim() !== '') {
       dispatch(postTagAction(tagName));

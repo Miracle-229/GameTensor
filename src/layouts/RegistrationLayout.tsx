@@ -1,8 +1,19 @@
 import Header from '@/components/Header';
 import { LayoutProps } from '@/helper/Types/game';
+import { getCurrentUserAction } from '@/store/currentUser/currentUserThunk';
+import { AppDispatch } from '@/store/store';
 import Head from 'next/head';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 export default function RegistrationLayout({ children, title }: LayoutProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      await dispatch(getCurrentUserAction());
+    };
+    fetchCurrentUser();
+  }, [dispatch]);
   return (
     <>
       <Head>

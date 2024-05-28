@@ -1,22 +1,31 @@
 import AdminLayout from '@/layouts/AdminLayot';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import style from '@/styles/AdminBlock.module.scss';
 import { IAuth } from '@/helper/Types/game';
 import { FaSearch } from 'react-icons/fa';
-import { AppDispatch, wrapper } from '@/store/store';
+import { AppDispatch } from '@/store/store';
 import { getUsersAction } from '@/store/getUsers/getUsersThunk';
 import { patchStatusUserAction } from '@/store/patchStatusUser/patchStatusUserThunk';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { usersData } from '@/store/getUsers/getUsersSelector';
 
-function Block({ userData }: { userData: IAuth[] }) {
+function Block() {
   const dispatch = useDispatch<AppDispatch>();
   const [searchTerm, setSearchTerm] = useState('');
-  const [userList, setUserList] = useState<IAuth[]>(userData);
+  const userData = useSelector(usersData);
+  const [userList, setUserList] = useState<IAuth[]>([]);
 
-  console.log(userData);
+  useEffect(() => {
+    dispatch(getUsersAction());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setUserList(userData);
+  }, [userData]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    const trimmedValue = event.target.value.trim().replace(/\s+/g, ' ');
+    setSearchTerm(trimmedValue);
     setUserList(
       userData.filter((user) =>
         user.login.toLowerCase().includes(event.target.value.toLowerCase())
@@ -72,24 +81,3 @@ function Block({ userData }: { userData: IAuth[] }) {
 }
 
 export default Block;
-
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) => async () => {
-    try {
-      const [usersRes] = await Promise.all([store.dispatch(getUsersAction())]);
-      const [userData] = await Promise.all([usersRes.payload]);
-      return {
-        props: {
-          userData,
-        },
-      };
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      return {
-        props: {
-          userData: [],
-        },
-      };
-    }
-  }
-);

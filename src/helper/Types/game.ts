@@ -1,7 +1,7 @@
 export type IAuth = {
   login: string;
   password?: string;
-  userId?: number | string;
+  userId?: number;
   email?: string;
   accessToken?: string;
   refreshToken?: string;
@@ -90,8 +90,9 @@ export type IChats = {
 
 export type IMessages = {
   date: string;
+  chatId: string;
   isChanged: boolean;
   isRead: boolean;
   text: string;
   user: IAuth;
-}[];
+};

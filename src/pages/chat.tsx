@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect, useRef } from 'react';
-import { Stomp } from '@stomp/stompjs';
+import { CompatClient, IMessage, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import Link from 'next/link';
 import styles from '@/styles/Chat.module.scss';
@@ -19,6 +19,7 @@ import { getNotifCountAction } from '@/store/getNotifCount/getNotifCountThunk';
 import { messagesData } from '@/store/getMessages/getMessagesSelector';
 import { getMessagesAction } from '@/store/getMessages/getMessagesThunk';
 import { currentUserData } from '@/store/currentUser/currentUserSelector';
+import { IMessages } from '@/helper/Types/game';
 
 interface ChatProps {
   initialDialogId: string;
@@ -32,43 +33,103 @@ function Chat({ initialDialogId }: ChatProps) {
   const [currentDialog, setCurrentDialog] = useState<string>(initialDialogId);
   const containerRef = useRef<HTMLDivElement>(null);
   const [newMessageText, setNewMessageText] = useState<string>('');
-  const stompClient = useRef<any>(null);
-  const [dataMess, setDataMess] = useState(messages);
+  const stompClient = useRef<CompatClient | null>(null);
+  const [dataMess, setDataMess] = useState<{
+    content: IMessages[];
+    pageable: { pageNumber: number };
+    totalPages: number;
+  }>(messages);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [prevScrollPosition, setPrevScrollPosition] = useState(0);
+  const [isMaxHeightReached, setIsMaxHeightReached] = useState(false);
+  const [isAddedNewMessage, setIsAddedNewMessage] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  console.log(dataMess);
+  console.log(dataMess.content);
+  const loadMoreMessages = async () => {
+    if (isLoading || isMaxHeightReached) return;
+    setIsLoading(true);
+    const nextPage = currentPage + 1;
+    const response = await dispatch(
+      getMessagesAction({ id: currentDialog, page: nextPage })
+    );
+    if (response.meta.requestStatus === 'fulfilled') {
+      const newMessages = response.payload;
+      if (newMessages.totalPages !== nextPage - 2) {
+        if (containerRef && containerRef.current) {
+          setPrevScrollPosition(containerRef.current.scrollHeight);
+        }
+        setCurrentPage(nextPage);
+        setDataMess((prevState) => {
+          const uniqueMessages = newMessages.content.filter(
+            (newMsg: IMessages) =>
+              !prevState.content.some(
+                (msg) =>
+                  msg.date === newMsg.date &&
+                  msg.user.userId === newMsg.user.userId
+              )
+          );
+          return {
+            ...prevState,
+            data: {
+              ...prevState,
+              content: [...uniqueMessages, ...prevState.content],
+            },
+          };
+        });
+      }
+    }
+    setIsLoading(false);
+  };
 
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const offset = date.getTimezoneOffset();
-    const offsetAbs = Math.abs(offset);
-    const offsetHours = Math.floor(offsetAbs / 60);
-    const offsetMinutes = offsetAbs % 60;
-    const offsetSign = offset < 0 ? '+' : '-';
-    const offsetString = `${offsetSign}${offsetHours
-      .toString()
-      .padStart(2, '0')}:${offsetMinutes.toString().padStart(2, '0')}`;
-    return date.toISOString().replace('Z', offsetString);
-  }
-
+  const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
+    if (scrollTop === 0 && !isLoading) {
+      loadMoreMessages();
+    }
+    if (scrollHeight === clientHeight) {
+      setIsMaxHeightReached(true);
+    } else {
+      setIsMaxHeightReached(false);
+    }
+  };
   useEffect(() => {
     const socket = new SockJS('http://localhost:8080/gametensor');
     stompClient.current = Stomp.over(socket);
-    stompClient.current.connect({}, (frame) => {
-      // Подписываемся на каждый диалог
+    stompClient.current.connect({}, () => {
       data.forEach((item) => {
-        stompClient.current.subscribe(
-          `/chat/${item.chatId}`,
-          async (message) => {
-            const incomingMessage = JSON.parse(message.body);
-            console.log('Received:', incomingMessage);
-            setDataMess((prevMessages) => [...prevMessages, incomingMessage]);
-          }
-        );
+        if (stompClient.current) {
+          stompClient.current.subscribe(
+            `/chat/${item.chatId}`,
+            (message: IMessage) => {
+              const incomingMessage = JSON.parse(message.body);
+              setDataMess((prevState) => {
+                const isUnique = !prevState.content.some(
+                  (msg) =>
+                    msg.date === incomingMessage.date &&
+                    msg.user.userId === incomingMessage.user.userId
+                );
+                setIsAddedNewMessage(true);
+                return {
+                  ...prevState,
+                  content: isUnique
+                    ? [incomingMessage, ...prevState.content]
+                    : prevState.content,
+                };
+              });
+            }
+          );
+        } else {
+          console.error('STOMP client is not initialized');
+        }
       });
     });
 
     return () => {
-      stompClient.current.deactivate();
+      if (stompClient.current) {
+        stompClient.current.deactivate();
+      }
     };
   }, [data]);
 
@@ -76,7 +137,7 @@ function Chat({ initialDialogId }: ChatProps) {
     if (newMessageText.trim() !== '') {
       if (stompClient.current) {
         const message = {
-          date: new Date().toLocaleTimeString(),
+          date: new Date().toISOString(),
           user: {
             userId: user.userId,
           },
@@ -96,7 +157,10 @@ function Chat({ initialDialogId }: ChatProps) {
   };
 
   useEffect(() => {
-    setDataMess(messages);
+    setDataMess((prevState) => ({
+      ...prevState,
+      content: [...prevState.content, ...messages.content],
+    }));
   }, [messages]);
 
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -109,29 +173,24 @@ function Chat({ initialDialogId }: ChatProps) {
     setNewMessageText(event.target.value);
   };
 
-  const scrollToBottom = () => {
-    if (containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    }
-  };
+  useEffect(() => {
+    if (dataMess.content.length <= 20 || isAddedNewMessage)
+      if (messagesEndRef && messagesEndRef.current) {
+        setIsAddedNewMessage(false);
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+  }, [dataMess, isAddedNewMessage]);
 
   useEffect(() => {
     if (containerRef && containerRef.current) {
-      const element = containerRef.current;
-      element.scroll({
-        top: element.scrollHeight,
-        left: 0,
-        behavior: 'smooth',
-      });
+      containerRef.current.scrollTop =
+        containerRef.current.scrollHeight - prevScrollPosition;
     }
-  }, [containerRef, messages]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [currentDialog]);
+  }, [prevScrollPosition]);
 
   useEffect(() => {
     setCurrentDialog(initialDialogId);
+    setCurrentPage(0);
   }, [initialDialogId]);
 
   useEffect(() => {
@@ -143,7 +202,7 @@ function Chat({ initialDialogId }: ChatProps) {
 
   useEffect(() => {
     const fetchMessages = async () => {
-      await dispatch(getMessagesAction(currentDialog));
+      await dispatch(getMessagesAction({ id: currentDialog }));
     };
     fetchMessages();
   }, [dispatch, currentDialog]);
@@ -154,6 +213,7 @@ function Chat({ initialDialogId }: ChatProps) {
     };
     fetchCurrentUser();
   }, [dispatch, currentDialog]);
+
   useEffect(() => {
     const fetchNotifCount = async () => {
       await dispatch(getNotifCountAction());
@@ -192,12 +252,20 @@ function Chat({ initialDialogId }: ChatProps) {
         )}
         {currentDialog !== undefined && (
           <div className={styles.messageArea}>
-            <div ref={containerRef} className={styles.messageOutput}>
-              {dataMess
+            <div
+              onScroll={handleScroll}
+              ref={containerRef}
+              className={styles.messageOutput}
+            >
+              {dataMess.content
                 .slice()
                 .reverse()
+                .filter((message) => message.chatId === currentDialog)
                 .map((message) => (
-                  <div key={message.date} className={styles.messageOutput_box}>
+                  <div
+                    key={`${message.date}-${message.chatId}-${message.text}`}
+                    className={styles.messageOutput_box}
+                  >
                     {message.user.userId === user.userId ? (
                       // Если сообщение от текущего пользователя
                       <div className={styles.messageOutput_user}>
@@ -211,6 +279,7 @@ function Chat({ initialDialogId }: ChatProps) {
                     )}
                   </div>
                 ))}
+              <div ref={messagesEndRef} />
             </div>
             <div className={styles.messageBox}>
               <input

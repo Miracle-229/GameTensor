@@ -32,7 +32,7 @@ function Header() {
   const dispatch = useDispatch<AppDispatch>();
   const userData = useSelector(currentUserData);
   const notifCount = useSelector(notifCountData);
-  const headerRef = useRef(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const loginFromQuery = router.query.login as string;
   const { login, status } = userData;
   const addAdvertisementLink = user ? '/ad/create' : '/registration';
@@ -86,8 +86,11 @@ function Header() {
     setShowNot(false);
     router.push('/');
   };
-  const handleOutsideClick = (event) => {
-    if (headerRef.current && !headerRef.current.contains(event.target)) {
+  const handleOutsideClick = (event: MouseEvent | TouchEvent) => {
+    if (
+      headerRef.current &&
+      !headerRef.current.contains(event.target as Node)
+    ) {
       setMenu(false);
       setShowUser(false);
       setShowNot(false);

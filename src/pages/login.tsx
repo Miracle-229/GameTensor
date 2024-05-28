@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import RegistrationLayout from '@/layouts/RegistrationLayout';
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import style from '@/styles/Registration.module.scss';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -17,8 +17,19 @@ function Login() {
   const [password, setPassword] = useState('');
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+  const [errorText, setErrorText] = useState('');
   const { visibleError, showAlertError, hideAlertError } = useAlert();
   const currentUser = useSelector(currentUserData);
+
+  const handleLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const trimmedLogin = e.target.value.trim().replace(/\s+/g, ' ');
+    setLogin(trimmedLogin);
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const trimmedPassword = e.target.value.trim().replace(/\s+/g, ' ');
+    setPassword(trimmedPassword);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,11 +45,14 @@ function Login() {
       }
       router.push('/');
     } catch (error) {
+      console.log(error);
+      const errorMessage = error.message;
+      setErrorText(errorMessage);
       showAlertError();
     }
   };
   return (
-    <RegistrationLayout title="Registration">
+    <RegistrationLayout title="Login">
       <div
         style={{
           display: 'flex',
@@ -50,13 +64,14 @@ function Login() {
           <h1>Login</h1>
           <input
             value={login}
-            onChange={(e) => setLogin(e.target.value)}
+            onChange={handleLoginChange}
+            pattern="^\S+(\s\S+)*$"
             placeholder="Login"
             type="text"
           />
           <input
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             placeholder="Password"
             type="password"
           />
@@ -68,7 +83,7 @@ function Login() {
       </div>
       <Alert
         type="error"
-        message="Error to authorization"
+        message={errorText}
         visible={visibleError}
         onClose={hideAlertError}
       />

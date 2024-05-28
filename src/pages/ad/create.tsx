@@ -26,35 +26,33 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [errorText, setErrorText] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const selectedImages = Array.from(e.target.files);
-      const totalImages = images.length + selectedImages.length;
+      const totalImages = selectedImages.length;
 
       if (totalImages > 6) {
         return;
       }
 
-      setImages((prevImages) => [...prevImages, ...selectedImages]);
-
-      // Обработка предварительного просмотра изображений
-      selectedImages.forEach((image) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setImagePreviews((prevPreviews) => [
-            ...prevPreviews,
-            reader.result as string,
-          ]);
-        };
-        reader.readAsDataURL(image);
-      });
+      // Reset images and previews
+      setImages(selectedImages);
+      const previews = selectedImages.map((image) =>
+        URL.createObjectURL(image)
+      );
+      setImagePreviews(previews);
     }
   };
 
   const handleRemoveImage = (index: number) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImagePreviews((prevPreviews) =>
+      prevPreviews.filter((_, i) => i !== index)
+    );
+
     if (inputRef.current) {
       inputRef.current.value = '';
     }
@@ -80,6 +78,13 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
       await dispatch(createAdAction(formData));
       router.push(`/user/${login}`);
     } catch (error) {
+      if (error instanceof Error) {
+        const errorMessage = error.message;
+        setErrorText(errorMessage);
+      } else {
+        const errorString = String(error);
+        setErrorText(errorString);
+      }
       showAlertError();
     }
   };
@@ -126,6 +131,7 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
                 accept="image/*"
                 onChange={handleImageChange}
                 className={style.noinput}
+                required
               />
               <label htmlFor="upload-image">Upload Image</label>
             </div>
@@ -136,12 +142,14 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            required
           />
           <TagsSearch tags={tagsData} />
           <h3>Description</h3>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            required
           />
           <h3>Price</h3>
           <input
@@ -149,13 +157,14 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+            required
           />
           <button type="submit">Create advertisements</button>
         </form>
       </div>
       <Alert
         type="error"
-        message="Error to create ad"
+        message={errorText}
         visible={visibleError}
         onClose={hideAlertError}
       />
