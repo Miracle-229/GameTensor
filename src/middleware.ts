@@ -7,7 +7,7 @@ export function middleware(req: NextRequest) {
     const protectedRoutes = [
       '/chat',
       '/bookmarks',
-      '/create',
+      '/ad/create',
       '/admin/block',
       '/admin/approve',
       '/admin/create',
@@ -32,12 +32,12 @@ export function middleware(req: NextRequest) {
       '/',
       '/chat',
       '/bookmarks',
-      '/create',
       '/registration',
       '/login',
       '/rules',
       '/advertisements',
       '/settings',
+      '/ad/create',
     ];
     if (protectedRoutes.includes(req.nextUrl.pathname)) {
       return NextResponse.redirect(new URL('/admin/block', req.url));

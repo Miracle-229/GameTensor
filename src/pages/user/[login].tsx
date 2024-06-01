@@ -14,7 +14,7 @@ import { getAdsAction } from '@/store/ads/adsThunk';
 import { adsData } from '@/store/ads/adsSelector';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { getCookie, setCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 import { getCurrentUserAction } from '@/store/currentUser/currentUserThunk';
 import { getBookmarkAction } from '@/store/getBookmark/getBookmarkThunk';
 import { subscribeAction } from '@/store/subscribe/subscribeThunk';
@@ -27,7 +27,6 @@ import { onSubscribeAction } from '@/store/onSubscribe/onSubscribeThunk';
 import { userNameData } from '@/store/getUserName/getUserNameSelector';
 
 export default function IdUserPage() {
-  const role = getCookie('role');
   const { visibleError, showAlertError, hideAlertError } = useAlert();
   const router = useRouter();
   const { login } = router.query;
@@ -165,7 +164,7 @@ export default function IdUserPage() {
                 Following: {user.followers?.length}
               </button>
             </div>
-            {login !== currentUser.login && role !== 'ROLE_ADMIN' && (
+            {login !== currentUser.login && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <button onClick={handleSubscribe} type="button">
                   {isFollowing ? 'Unsubscribe' : 'Subscribe'}
