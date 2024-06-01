@@ -1,19 +1,20 @@
 import Header from '@/components/Header';
 import { LayoutProps } from '@/helper/Types/game';
-import { getCurrentUserAction } from '@/store/currentUser/currentUserThunk';
+import { currentUserData } from '@/store/currentUser/currentUserSelector';
+import { logoutAction } from '@/store/logout/logoutThunk';
 import { AppDispatch } from '@/store/store';
 import Head from 'next/head';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function RegistrationLayout({ children, title }: LayoutProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const currentUser = useSelector(currentUserData);
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      await dispatch(getCurrentUserAction());
-    };
-    fetchCurrentUser();
-  }, [dispatch]);
+    if (currentUser.status === 'BLOCKED') {
+      dispatch(logoutAction());
+    }
+  }, [dispatch, currentUser.status]);
   return (
     <>
       <Head>

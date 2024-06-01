@@ -1,29 +1,29 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { patchStatusAdAction } from './patchStatusSelectorAd';
+import { patchStatusNotifAction } from './pathStatusNotifThunk';
 
-type statusAdState = {
+type statusUserState = {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 };
 
-const initialState: statusAdState = {
+const initialState: statusUserState = {
   status: 'idle',
   error: null,
 };
 
-export const patchStatusAdSlice = createSlice({
-  name: 'adStatus',
+export const patchStatusNotifSlice = createSlice({
+  name: 'bookmarks',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(patchStatusAdAction.pending, (state) => {
+      .addCase(patchStatusNotifAction.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(patchStatusAdAction.fulfilled, (state) => {
+      .addCase(patchStatusNotifAction.fulfilled, (state) => {
         state.status = 'succeeded';
       })
-      .addCase(patchStatusAdAction.rejected, (state, action) => {
+      .addCase(patchStatusNotifAction.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message as string;
       });

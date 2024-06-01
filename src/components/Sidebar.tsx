@@ -6,9 +6,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MdBlock, MdDomainVerification } from 'react-icons/md';
 import { FaTag, FaDoorClosed } from 'react-icons/fa';
+import { deleteCookie } from 'cookies-next';
+import { useRouter } from 'next/router';
 
 function Sidebar() {
   const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
 
   const openModal = () => {
     setShowModal(true);
@@ -16,6 +19,9 @@ function Sidebar() {
 
   const closeModal = () => {
     setShowModal(false);
+    deleteCookie('user');
+    deleteCookie('role');
+    router.push('/');
   };
 
   const logout = () => {

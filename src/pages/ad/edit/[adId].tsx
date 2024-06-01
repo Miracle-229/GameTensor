@@ -10,16 +10,18 @@ import { AppDispatch, wrapper } from '@/store/store';
 import { getTagsAction } from '@/store/tags/tagsThunk';
 import { GetServerSidePropsContext } from 'next';
 import { getIdAction } from '@/store/id/idThunk';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getImageIdAction } from '@/store/imageId/imageThunk';
 import { useRouter } from 'next/router';
 import { editAdAction } from '@/store/editAd/editAdThunk';
 import Alert from '@/components/Alert';
 import { useAlert } from '@/helper/alertHooks';
+import { editAdError } from '@/store/editAd/editAdSelector';
 
 interface IMedia {
   file: File;
   amId: string;
+  url: string;
 }
 
 export default function Edit({
@@ -39,7 +41,8 @@ export default function Edit({
   const [description, setDescription] = useState(gameData.description);
   const [price, setPrice] = useState(gameData.price);
   const inputRef = useRef<HTMLInputElement>(null);
-  
+  const errorText = useSelector(editAdError) || '';
+  const [errorCountFiles, setErrorCountFiles] = useState('');
   const dispatch = useDispatch<AppDispatch>();
   const { visibleError, showAlertError, hideAlertError } = useAlert();
 
@@ -57,13 +60,14 @@ export default function Edit({
         const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
         return {
           file,
-          amId: gameData.medias[index].amId, // Save the amId from the original media object
+          amId: gameData.medias[index].amId,
+          url: URL.createObjectURL(file),
         };
       });
 
       const fileResults = await Promise.all(filePromises);
-      setExistingMedia(fileResults); // Set the existing media state
-      setImages(fileResults.map((result) => result.file)); // Set the images state without amId
+      setExistingMedia(fileResults);
+      setImages(fileResults.map((result) => result.file));
     };
 
     fetchImages();
@@ -71,17 +75,24 @@ export default function Edit({
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const selectedFiles = Array.from(e.target.files);
+      const selectedFiles = Array.from(e.target.files).filter((file) => {
+        const fileType = file.type.toLowerCase();
+        return fileType === 'image/jpeg' || fileType === 'image/png';
+      });
+
       const totalImages =
         existingMedia.length + newMedia.length + selectedFiles.length;
 
       if (totalImages > 6) {
+        setErrorCountFiles('Maximum 6 files');
+        showAlertError();
         return;
       }
 
       const newMediaItems = selectedFiles.map((file) => ({
         file,
-        amId: '', // New images will have an empty amId
+        amId: '',
+        url: URL.createObjectURL(file), // Create the object URL here
       }));
 
       setNewMedia((prevNewMedia) => [...prevNewMedia, ...newMediaItems]);
@@ -118,7 +129,6 @@ export default function Edit({
 
     const formData = new FormData();
 
-    // Append new images only
     newMedia.forEach((mediaItem) => {
       formData.append('files', mediaItem.file);
     });
@@ -161,7 +171,7 @@ export default function Edit({
                   <Image
                     width={100}
                     height={100}
-                    src={URL.createObjectURL(mediaItem.file)}
+                    src={mediaItem.url} // Use the stored URL here
                     alt={`Uploaded ${index + 1}`}
                     style={{ maxWidth: '200px', maxHeight: '200px' }}
                   />
@@ -182,7 +192,7 @@ export default function Edit({
                   <Image
                     width={100}
                     height={100}
-                    src={URL.createObjectURL(mediaItem.file)}
+                    src={mediaItem.url} // Use the stored URL here
                     alt={`Uploaded ${existingMedia.length + index + 1}`}
                     style={{ maxWidth: '200px', maxHeight: '200px' }}
                   />
@@ -236,13 +246,18 @@ export default function Edit({
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'e' || e.key === 'E') {
+                e.preventDefault();
+              }
+            }}
           />
           <button type="submit">Update advertisements</button>
         </form>
       </div>
       <Alert
         type="error"
-        message="Error to edit ad"
+        message={errorText || errorCountFiles}
         visible={visibleError}
         onClose={hideAlertError}
       />
@@ -253,6 +268,23 @@ export default function Edit({
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context: GetServerSidePropsContext) => {
     try {
+      const { role, user } = context.req.cookies;
+      if (!role) {
+        return {
+          redirect: {
+            destination: '/',
+            permanent: false,
+          },
+        };
+      }
+      if (role === 'ROLE_ADMIN') {
+        return {
+          redirect: {
+            destination: '/admin/block',
+            permanent: false,
+          },
+        };
+      }
       const id = context.params?.adId as string;
       const [gameRes, tagsRes] = await Promise.all([
         store.dispatch(getIdAction(id)),
@@ -262,6 +294,17 @@ export const getServerSideProps = wrapper.getServerSideProps(
         gameRes.payload,
         tagsRes.payload,
       ]);
+      if (user) {
+        const userParse = JSON.parse(user);
+        if (userParse.login !== gameData.user.login) {
+          return {
+            redirect: {
+              destination: '/admin/block',
+              permanent: false,
+            },
+          };
+        }
+      }
       return {
         props: {
           gameData,

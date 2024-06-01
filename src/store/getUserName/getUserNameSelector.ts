@@ -3,17 +3,17 @@ import { AppState } from '../store';
 
 const selectUserName = (state: AppState) => state.getUserName;
 
-export const currentUserNameData = createSelector(
+export const userNameData = createSelector(
   selectUserName,
   (userName) => userName.data
 );
 
-export const currentUserNameStatus = createSelector(
+export const userNameStatus = createSelector(
   selectUserName,
   (userName) => userName.status
 );
 
-export const currentUserNameError = createSelector(
+export const userNameError = createSelector(
   selectUserName,
   (userName) => userName.error
 );

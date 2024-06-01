@@ -1,12 +1,13 @@
 export type IAuth = {
   login: string;
   password?: string;
-  userId?: number;
+  userId?: number | string;
   email?: string;
   accessToken?: string;
   refreshToken?: string;
   status?: string;
   subscribers?: IAuth[];
+  followers?: IAuth[];
 };
 
 export type ITags = {
@@ -90,9 +91,18 @@ export type IChats = {
 
 export type IMessages = {
   date: string;
+  messageId: number;
   chatId: string;
   isChanged: boolean;
   isRead: boolean;
   text: string;
   user: IAuth;
+};
+
+export type INotif = {
+  creationDate: string;
+  linkId: string;
+  message: string;
+  notificationId: string;
+  read: boolean;
 };

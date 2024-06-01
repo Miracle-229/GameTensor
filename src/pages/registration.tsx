@@ -3,20 +3,24 @@ import RegistrationLayout from '@/layouts/RegistrationLayout';
 import React, { ChangeEvent, useState } from 'react';
 import style from '@/styles/Registration.module.scss';
 import Link from 'next/link';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/store/store';
 import { registrationAction } from '@/store/registration/registrationThunk';
 import { useRouter } from 'next/router';
 import Alert from '@/components/Alert';
 import { useAlert } from '@/helper/alertHooks';
+import { registrationError } from '@/store/registration/registrationSelector';
 
 function Registration() {
   const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { visibleError, showAlertError, hideAlertError } = useAlert();
+  const errorText = useSelector(registrationError) || '';
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     const trimmedLogin = e.target.value.trim().replace(/\s+/g, ' ');
@@ -33,17 +37,28 @@ function Registration() {
     setPassword(trimmedPassword);
   };
 
+  const handleRepeatPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setRepeatPassword(e.target.value);
+    if (password !== e.target.value) {
+      setPasswordError('Passwords do not match');
+    } else {
+      setPasswordError('');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await dispatch(
-        registrationAction({ login, email, password })
-      );
-      if (response.type === 'registration/rejected') {
-        showAlertError();
-        return;
+      if (passwordError !== 'Passwords do not match') {
+        const response = await dispatch(
+          registrationAction({ login, email, password })
+        );
+        if (response.type === 'registration/rejected') {
+          showAlertError();
+          return;
+        }
+        router.push('/');
       }
-      router.push('/');
     } catch (error) {
       showAlertError();
     }
@@ -80,7 +95,16 @@ function Registration() {
             placeholder="Password"
             type="password"
           />
-          <input required placeholder="Repeat password" type="password" />
+          <input
+            value={repeatPassword}
+            onChange={handleRepeatPasswordChange}
+            required
+            placeholder="Repeat password"
+            type="password"
+          />
+          {passwordError && (
+            <p style={{ marginTop: '10px' }}>{passwordError}</p>
+          )}
           <button type="submit">Enter</button>
         </form>
         <Link className={style.link} href="/login">
@@ -89,7 +113,7 @@ function Registration() {
       </div>
       <Alert
         type="error"
-        message="Error to registration (This username or email address is already occupied)"
+        message={errorText}
         visible={visibleError}
         onClose={hideAlertError}
       />

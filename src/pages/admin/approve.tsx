@@ -28,7 +28,7 @@ function Approve() {
   const filteredAds = dataAds.content.filter(
     (ad: IGameData) =>
       ad.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (statusFilter === 'CREATED' || ad.status === statusFilter) // Include status filter
+      (statusFilter === 'CREATED' || ad.status === statusFilter)
   );
 
   const changeStatus = (newStatus: string) => {
@@ -108,20 +108,12 @@ function Approve() {
           {filteredAds.map((data) => (
             <div className={style.ads_block} key={data.adId}>
               <select
-                defaultValue={
-                  data.status === 'CREATED'
-                    ? 'CREATED'
-                    : data.status === 'APPROVED'
-                      ? 'APPROVED'
-                      : data.status === 'BLOCKED'
-                        ? 'BLOCKED'
-                        : data.status === 'CLOSED'
-                          ? 'CLOSED'
-                          : 'BLOCKED'
-                }
+                defaultValue={data.status}
                 onChange={(e) => changeAdStatus(e, data.adId)}
               >
-                <option value="CREATED">New</option>
+                {data.status === 'CREATED' && (
+                  <option value="CREATED">New</option>
+                )}
                 <option value="APPROVED">Approved</option>
                 <option value="BLOCKED">Blocked</option>
                 <option value="CLOSED">Deleted</option>

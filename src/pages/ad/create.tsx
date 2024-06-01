@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import { currentUserData } from '@/store/currentUser/currentUserSelector';
 import { useAlert } from '@/helper/alertHooks';
 import Alert from '@/components/Alert';
+import { createAdError } from '@/store/createAd/createAdSelector';
 
 export default function Create({ tagsData }: { tagsData: ITags[] }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -26,24 +27,30 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [errorText, setErrorText] = useState('');
+  const errorText = useSelector(createAdError) || '';
+  const [errorCountFiles, setErrorCountFiles] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const selectedImages = Array.from(e.target.files);
-      const totalImages = selectedImages.length;
+      const selectedImages = Array.from(e.target.files).filter((file) => {
+        const fileType = file.type.toLowerCase();
+        return fileType === 'image/jpeg' || fileType === 'image/png';
+      });
+
+      const totalImages = images.length + selectedImages.length;
 
       if (totalImages > 6) {
+        setErrorCountFiles('Maximum 6 files');
+        showAlertError();
         return;
       }
 
-      // Reset images and previews
-      setImages(selectedImages);
-      const previews = selectedImages.map((image) =>
+      setImages((prevImages) => [...prevImages, ...selectedImages]);
+      const newPreviews = selectedImages.map((image) =>
         URL.createObjectURL(image)
       );
-      setImagePreviews(previews);
+      setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
     }
   };
 
@@ -78,13 +85,6 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
       await dispatch(createAdAction(formData));
       router.push(`/user/${login}`);
     } catch (error) {
-      if (error instanceof Error) {
-        const errorMessage = error.message;
-        setErrorText(errorMessage);
-      } else {
-        const errorString = String(error);
-        setErrorText(errorString);
-      }
       showAlertError();
     }
   };
@@ -157,6 +157,11 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'e' || e.key === 'E') {
+                e.preventDefault();
+              }
+            }}
             required
           />
           <button type="submit">Create advertisements</button>
@@ -164,7 +169,7 @@ export default function Create({ tagsData }: { tagsData: ITags[] }) {
       </div>
       <Alert
         type="error"
-        message={errorText}
+        message={errorText || errorCountFiles}
         visible={visibleError}
         onClose={hideAlertError}
       />

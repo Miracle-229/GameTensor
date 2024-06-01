@@ -19,31 +19,50 @@ import { IoMdChatbubbles } from 'react-icons/io';
 import { MdContacts, MdDashboard } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { currentUserData } from '@/store/currentUser/currentUserSelector';
-import { getCookie } from 'cookies-next';
+import { deleteCookie, getCookie } from 'cookies-next';
 import { AppDispatch } from '@/store/store';
 import { logoutAction } from '@/store/logout/logoutThunk';
 import { useRouter } from 'next/router';
 import { notifCountData } from '@/store/getNotifCount/getNotifCountSelector';
+import { getNotifAction } from '@/store/getNotif/getNotifThunk';
+import { notifData } from '@/store/getNotif/getNotifSelector';
+import { formatDateLink } from '@/helper/Constants/timeFunctions';
+import { patchStatusNotifAction } from '@/store/pathStatusNotif/pathStatusNotifThunk';
+import { getCurrentUserAction } from '@/store/currentUser/currentUserThunk';
 import Search from './Search';
 
 function Header() {
-  const user = getCookie('user');
+  const role = getCookie('role');
+  console.log(role);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const userData = useSelector(currentUserData);
   const notifCount = useSelector(notifCountData);
   const headerRef = useRef<HTMLDivElement>(null);
   const loginFromQuery = router.query.login as string;
-  const { login, status } = userData;
-  const addAdvertisementLink = user ? '/ad/create' : '/registration';
+  const advertisementsFromQuery = router.pathname;
+  console.log(advertisementsFromQuery);
+  const { login } = userData;
+  const addAdvertisementLink = role ? '/ad/create' : '/registration';
   const [showUser, setShowUser] = useState<boolean>(false);
   const [showNot, setShowNot] = useState<boolean>(false);
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [menu, setMenu] = useState<boolean>(false);
-  const [isClient, setIsClient] = useState<boolean>(false);
   const isLaptop = useMediaQuery({ minWidth: 769, maxWidth: 1024 });
   const isTablet = useMediaQuery({ minWidth: 426, maxWidth: 768 });
   const isPhone = useMediaQuery({ minWidth: 345, maxWidth: 431 });
+  const dataNotif = useSelector(notifData);
+  const getNotif = () => {
+    dispatch(getNotifAction());
+  };
+  useEffect(() => {
+    if (dataNotif.content && dataNotif.content.length > 0) {
+      const notificationsIds = dataNotif.content.map(
+        (notif) => notif.notificationId
+      );
+      dispatch(patchStatusNotifAction(notificationsIds));
+    }
+  }, [dataNotif, dispatch]);
   const getSize = (...args: boolean[]) => {
     const [laptop, tablet, phone] = args;
     if (laptop) {
@@ -71,11 +90,8 @@ function Header() {
     setShowNot(!showNot);
     setMenu(false);
     setShowUser(false);
+    getNotif();
   };
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
   useEffect(() => {
     setShowMenu(isPhone);
   }, [isPhone]);
@@ -84,6 +100,8 @@ function Header() {
     setMenu(false);
     setShowUser(false);
     setShowNot(false);
+    deleteCookie('user');
+    deleteCookie('role');
     router.push('/');
   };
   const handleOutsideClick = (event: MouseEvent | TouchEvent) => {
@@ -97,15 +115,22 @@ function Header() {
     }
   };
 
-  useEffect(() => {
-    // Добавляем обработчик клика при монтировании компонента
-    document.addEventListener('click', handleOutsideClick);
+  const logoClick = () => {
+    router.push('/');
+  };
 
-    // Удаляем обработчик клика при размонтировании компонента
+  useEffect(() => {
+    document.addEventListener('click', handleOutsideClick);
     return () => {
       document.removeEventListener('click', handleOutsideClick);
     };
   }, []);
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      await dispatch(getCurrentUserAction());
+    };
+    fetchCurrentUser();
+  }, [dispatch]);
   const { width, height } = getSize(isLaptop, isTablet, isPhone);
   return (
     <>
@@ -113,24 +138,26 @@ function Header() {
         {showMenu ? (
           <>
             <div className={style.search}>
-              <Link href="/" className={style.logo}>
+              <button className={style.logo} type="button" onClick={logoClick}>
                 <Image
                   src="/logo.png"
                   alt="My Image"
                   width={width}
                   height={height}
                 />
-              </Link>
+              </button>
               <Search />
             </div>
             <div className={style.block_header_user}>
               <button
-                // ref={notRef}
                 onClick={openNot}
-                className={`${user ? style.burger_button : style.none}`}
+                className={`${
+                  userData.login ? style.burger_button : style.none
+                }`}
                 type="button"
               >
                 <FaBell size={22} />
+                {notifCount > 0 && <span>{notifCount}</span>}
               </button>
               <button
                 onClick={openUser}
@@ -151,40 +178,45 @@ function Header() {
         ) : (
           <>
             <div className={style.block_header}>
-              <Link href="/" className={style.logo}>
+              <button type="button" onClick={logoClick} className={style.logo}>
                 <Image
                   src="/logo.png"
                   alt="My Image"
                   width={width}
                   height={height}
                 />
-              </Link>
+              </button>
               <Link className={style.link} href="/rules">
                 Rules
               </Link>
-              <Link className={style.link} href="/advertisements">
-                Advertisements
-              </Link>
+              {advertisementsFromQuery !== '/advertisements' ? (
+                <Link className={style.link} href="/advertisements">
+                  Advertisements
+                </Link>
+              ) : (
+                <div className={style.link}>Advertisements</div>
+              )}
               <div className={style.search}>
                 <FaSearch size={22} />
                 <Search />
               </div>
             </div>
             <div className={style.block_header_user}>
-              {status === 'ACTIVE' && (
-                <Link className={style.add_button} href={addAdvertisementLink}>
-                  Add advertisements
-                </Link>
-              )}
-              {user && isClient && (
-                <button
-                  onClick={openNot}
-                  className={style.burger_button}
-                  type="button"
-                >
-                  <FaBell className={style.user_ico} size={22} />
-                </button>
-              )}
+              <Link className={style.add_button} href={addAdvertisementLink}>
+                Add advertisements
+              </Link>
+
+              <button
+                onClick={openNot}
+                className={`${
+                  userData.login ? style.burger_button : style.none
+                }`}
+                type="button"
+              >
+                <FaBell className={style.user_ico} size={22} />
+                {notifCount > 0 && <span>{notifCount}</span>}
+              </button>
+
               <button
                 onClick={openUser}
                 className={style.burger_button_user}
@@ -201,10 +233,14 @@ function Header() {
           <Link className={style.link} href="/rules">
             Rules
           </Link>
-          <Link className={style.link} href="/advertisements">
-            Advertisements
-          </Link>
-          {user && (
+          {advertisementsFromQuery !== '/advertisements' ? (
+            <Link className={style.link} href="/advertisements">
+              Advertisements
+            </Link>
+          ) : (
+            <div className={style.link}>Advertisements</div>
+          )}
+          {role && (
             <Link className={style.add_button} href="/ad/create">
               Add advertisements
             </Link>
@@ -213,7 +249,7 @@ function Header() {
       )}
       {showUser && (
         <div className={style.menu_user}>
-          {user ? (
+          {role ? (
             <>
               <Link className={style.link} href="/user/settings">
                 <MdContacts size={20} /> Settings account
@@ -230,12 +266,12 @@ function Header() {
               <Link className={style.link} href="/bookmarks">
                 <FaBookmark size={20} /> Bookmarks
               </Link>
-              {status === 'ACTIVE' && (
-                <Link className={style.link} href="/chat">
-                  <IoMdChatbubbles size={20} />
-                  Chat
-                </Link>
-              )}
+
+              <Link className={style.link} href="/chat">
+                <IoMdChatbubbles size={20} />
+                Chat
+              </Link>
+
               <Link onClick={logout} className={style.link} href="/">
                 <FaDoorOpen size={20} />
                 Exit
@@ -254,22 +290,22 @@ function Header() {
         </div>
       )}
       {showNot && (
-        <>
-          {status === 'ACTIVE' && (
-            <div className={style.menu_user}>
-              <Link className={style.link} href="/">
-                <p>There are no notifications yet</p>
-              </Link>
+        <div className={style.menu_user}>
+          {dataNotif.content.length > 0 ? (
+            <div className={style.notification_box}>
+              {dataNotif.content.map((notif) => (
+                <Link href={`/ad/${notif.linkId}`} key={notif.notificationId}>
+                  <div className={style.notification_div}>
+                    <p>{notif.message}</p>
+                    <span>{formatDateLink(notif.creationDate)}</span>
+                  </div>
+                </Link>
+              ))}
             </div>
+          ) : (
+            <p>There are no notifications yet</p>
           )}
-          {status === 'BLOCKED' && (
-            <div className={style.menu_user}>
-              <Link className={style.link} href="/">
-                <p>Your account is blocked</p>
-              </Link>
-            </div>
-          )}
-        </>
+        </div>
       )}
     </>
   );

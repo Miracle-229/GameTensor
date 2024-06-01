@@ -1,6 +1,7 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/no-unescaped-entities */
 import RegistrationLayout from '@/layouts/RegistrationLayout';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import style from '@/styles/Registration.module.scss';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -11,15 +12,20 @@ import { setCookie } from 'cookies-next';
 import { useAlert } from '@/helper/alertHooks';
 import Alert from '@/components/Alert';
 import { currentUserData } from '@/store/currentUser/currentUserSelector';
+import { loginError } from '@/store/login/loginSelector';
+import { getUserNameAction } from '@/store/getUserName/getUserNameThunk';
+import { userNameData } from '@/store/getUserName/getUserNameSelector';
 
 function Login() {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const [errorText, setErrorText] = useState('');
   const { visibleError, showAlertError, hideAlertError } = useAlert();
   const currentUser = useSelector(currentUserData);
+  const [errorBlock, setErrorBlock] = useState('');
+  const errorText = useSelector(loginError) || '';
+  const user = useSelector(userNameData);
 
   const handleLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
     const trimmedLogin = e.target.value.trim().replace(/\s+/g, ' ');
@@ -31,26 +37,35 @@ function Login() {
     setPassword(trimmedPassword);
   };
 
+  useEffect(() => {
+    dispatch(getUserNameAction(login));
+  }, [dispatch, login]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await dispatch(loginAction({ login, password }));
-      if (response.type === 'login/rejected') {
+      if (user.status !== 'BLOCKED') {
+        const response = await dispatch(loginAction({ login, password }));
+
+        if (response.type === 'login/rejected') {
+          showAlertError();
+          return;
+        }
+        if (localStorage.getItem('accessToken')) {
+          setCookie('user', user, { maxAge: 60 * 60 * 24 });
+          localStorage.setItem('user', JSON.stringify(currentUser));
+        }
+        router.push('/');
+      } else {
+        setErrorBlock('You have been blocked');
         showAlertError();
-        return;
       }
-      if (localStorage.getItem('accessToken')) {
-        setCookie('user', 'user', { maxAge: 60 * 60 * 24 });
-        localStorage.setItem('user', JSON.stringify(currentUser));
-      }
-      router.push('/');
     } catch (error) {
       console.log(error);
-      const errorMessage = error.message;
-      setErrorText(errorMessage);
       showAlertError();
     }
   };
+
   return (
     <RegistrationLayout title="Login">
       <div
@@ -83,7 +98,7 @@ function Login() {
       </div>
       <Alert
         type="error"
-        message={errorText}
+        message={errorText || errorBlock}
         visible={visibleError}
         onClose={hideAlertError}
       />

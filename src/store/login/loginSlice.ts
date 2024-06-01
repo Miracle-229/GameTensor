@@ -34,7 +34,7 @@ export const loginSlice = createSlice({
       })
       .addCase(loginAction.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload as string;
+        state.error = action.error.message as string;
       });
   },
 });

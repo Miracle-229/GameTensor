@@ -52,7 +52,7 @@ api.interceptors.response.use(
           localStorage.setItem('accessToken', response.data.accessToken);
           localStorage.setItem('refreshToken', response.data.refreshToken);
         }
-        console.log(response);
+
         return api.request(originalRequest);
       } catch (e) {
         console.log(e);

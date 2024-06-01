@@ -25,6 +25,7 @@ const initialState: CurrentUserState = {
     content: [
       {
         date: '',
+        messageId: 0,
         chatId: '',
         isChanged: false,
         isRead: false,

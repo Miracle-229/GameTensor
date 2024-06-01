@@ -31,12 +31,34 @@
 }
 .chat {
   background-color: #2f2f2f;
-  padding: 5px 60px;
+  padding: 10px 40px;
   border-radius: 30px;
   align-items: center;
   display: flex;
   max-width: 200px;
+  border: none;
+  font-size: 18px;
+  transition: 0.3s;
+  cursor: pointer;
 }
+.chat:hover {
+  background-color: #575757;
+  transition: 0.3s;
+}
+.edit {
+  background-color: #2f2f2f;
+  padding: 5px 30px;
+  border-radius: 30px;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.edit:hover {
+  background-color: #575757;
+  transition: 0.3s;
+}
+
 .inf_block {
   margin-left: 100px;
   display: flex;
@@ -48,13 +70,31 @@
     font-weight: bold;
   }
 }
+.bookmark {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.none {
+  display: none;
+}
 .overview {
   font-weight: bold;
   font-style: italic;
   padding-right: 10px;
 }
+.overview_tags {
+  background-color: #7f7f7f;
+  color: white;
+  padding: 2px 15px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
 .description {
   padding: 0px 60px 40px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: normal;
   h3 {
     font-size: 40px;
     font-weight: bold;

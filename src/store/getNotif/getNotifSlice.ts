@@ -2,19 +2,40 @@
 
 import { createAction, createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
+import { INotif } from '@/helper/Types/game';
 import type { AppState } from '../store';
 import { getNotifAction } from './getNotifThunk';
 
 const hydrate = createAction<AppState>(HYDRATE);
 
 type notifState = {
-  data: string;
+  data: {
+    content: INotif[];
+    pageable: {
+      pageNumber: number;
+    };
+    totalPages: number;
+  };
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 };
 
 const initialState: notifState = {
-  data: '',
+  data: {
+    content: [
+      {
+        creationDate: '',
+        linkId: '',
+        message: '',
+        notificationId: '',
+        read: false,
+      },
+    ],
+    pageable: {
+      pageNumber: 0,
+    },
+    totalPages: 0,
+  },
   status: 'idle',
   error: null,
 };

@@ -7,20 +7,21 @@ export const searchGamesAction = createAsyncThunk(
   async (query: string) => {
     try {
       let requestBody: RequestBody | RequestBody[] = [];
-      if (query.length > 0) {
-        requestBody = [
-          {
-            key: 'title',
-            value: query,
-          },
-        ];
-      }
+      requestBody = [
+        {
+          key: 'title',
+          value: query,
+        },
+        {
+          key: 'status',
+          value: 'APPROVED',
+        },
+      ];
       const response = await api.post(
         'ad?page=0&sort=creationDate,desc',
         requestBody
       );
       const data = await response.data.content;
-      // console.log(response.data);
       const parsedData = data.map((game: IGameData) => ({
         medias: game.medias.map((media) => ({
           amId: media.amId,
@@ -28,7 +29,7 @@ export const searchGamesAction = createAsyncThunk(
         })),
         adId: game.adId,
         title: game.title,
-        price: game.price || 'N/A',
+        price: game.price,
         user: game.user,
       }));
       return parsedData;

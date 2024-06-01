@@ -13,22 +13,20 @@ import Link from 'next/link';
 import { getBookmarkAction } from '@/store/getBookmark/getBookmarkThunk';
 import { bookmarkData } from '@/store/getBookmark/getBookmarkSelector';
 import { deleteBookmarkAction } from '@/store/deleteBookmark/deleteBookmarkThunk';
-import { getCookie } from 'cookies-next';
+import { useRouter } from 'next/router';
+import { currentUserData } from '@/store/currentUser/currentUserSelector';
 
 function CardAds({ adsData }: { adsData: IGameData }) {
-  const user = getCookie('user');
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const imageSrc = useSelector(imageIdData)[adsData.adId];
   const bookmark = useSelector(bookmarkData);
-  const [isClient, setIsClient] = useState<boolean>(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const currentUser = useSelector(currentUserData);
   const setBookmark = async () => {
     await dispatch(postBookmarkAction(adsData.adId));
     dispatch(getBookmarkAction());
   };
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
   const unsetBookmark = async () => {
     const bookmarkedAd = bookmark.find((item) => item.ad.adId === adsData.adId);
     if (bookmarkedAd) {
@@ -44,10 +42,14 @@ function CardAds({ adsData }: { adsData: IGameData }) {
     }
   }, [adsData.adId, adsData.medias, imageLoaded, dispatch]);
   const isBookmarked = bookmark.some((item) => item.ad.adId === adsData.adId);
+  const clickImg = () => {
+    router.push(`/ad/${adsData.adId}`);
+  };
+
   return (
     <div className={style.main}>
       {imageSrc ? (
-        <Link href={`/ad/${adsData.adId}`}>
+        <button type="button" className={style.link} onClick={clickImg}>
           <Image
             className={style.image}
             src={imageSrc}
@@ -58,7 +60,7 @@ function CardAds({ adsData }: { adsData: IGameData }) {
             alt="GameTensor"
             loading="lazy"
           />
-        </Link>
+        </button>
       ) : (
         <Link href={`/ad/${adsData.adId}`}>
           <Image
@@ -87,37 +89,25 @@ function CardAds({ adsData }: { adsData: IGameData }) {
                 : `@${adsData?.user.login}` || 'НЕИЗВЕСТНОЕ НАЗВАНИЕ'}
             </h4>
           </Link>
-          {user && isClient ? (
-            <>
-              {isBookmarked ? (
-                <button
-                  style={{
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                  type="button"
-                  onClick={unsetBookmark}
-                >
-                  <FaBookmark className={style.icon} />
-                </button>
-              ) : (
-                <button
-                  style={{
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                  type="button"
-                  onClick={setBookmark}
-                >
-                  <FaRegBookmark className={style.icon} />
-                </button>
-              )}
-            </>
-          ) : (
-            <div />
-          )}
+          <>
+            {isBookmarked ? (
+              <button
+                className={`${currentUser ? style.bookmark : style.none}`}
+                type="button"
+                onClick={unsetBookmark}
+              >
+                <FaBookmark className={style.icon} />
+              </button>
+            ) : (
+              <button
+                className={`${currentUser ? style.bookmark : style.none}`}
+                type="button"
+                onClick={setBookmark}
+              >
+                <FaRegBookmark className={style.icon} />
+              </button>
+            )}
+          </>
         </div>
       </div>
     </div>

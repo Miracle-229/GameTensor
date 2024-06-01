@@ -2,14 +2,16 @@ import AdminLayout from '@/layouts/AdminLayot';
 import React, { useState } from 'react';
 import style from '@/styles/CreateTag.module.scss';
 import { postTagAction } from '@/store/postTag/postTagThunk';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/store/store';
 import Alert from '@/components/Alert';
 import { useAlert } from '@/helper/alertHooks';
+import { postTagError } from '@/store/postTag/postTagSelector';
 
 function Create() {
   const dispatch = useDispatch<AppDispatch>();
   const [tagName, setTagName] = useState('');
+  const errorText = useSelector(postTagError) || '';
   const {
     visibleSuccess,
     visibleError,
@@ -49,7 +51,7 @@ function Create() {
       />
       <Alert
         type="error"
-        message="Error to create tag"
+        message={errorText}
         visible={visibleError}
         onClose={hideAlertError}
       />

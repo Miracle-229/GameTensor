@@ -2,25 +2,28 @@ import React, { useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Modal from 'react-modal';
 import style from '@/styles/FollowModal.module.scss';
-import Image from 'next/image';
 import { IoSearch } from 'react-icons/io5';
 import { IAuth } from '@/helper/Types/game';
 
 function FollowModal({
   isOpen,
+  onSubscribe,
   onClose,
   users,
   flag,
+  isFollow,
 }: {
   isOpen: boolean;
   onClose: () => void;
   users: IAuth[];
   flag: boolean;
+  isFollow: boolean;
+  onSubscribe: (id: string) => void;
 }) {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredUsers = users.filter((user) =>
-    user.login.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = users.filter((follower) =>
+    follower.login.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const customStyles = {
@@ -48,7 +51,7 @@ function FollowModal({
       contentLabel="User Modal"
     >
       <div className={style.main}>
-        <h2>Followers</h2>
+        {isFollow === true ? <h2>Following</h2> : <h2>Followers</h2>}
         <div>
           <IoSearch size={25} />
           <input
@@ -58,13 +61,19 @@ function FollowModal({
           />
         </div>
         <ul>
-          {filteredUsers.map((user) => (
-            <li style={{ color: 'black' }} key={user.userId}>
+          {filteredUsers.map((follower) => (
+            <li style={{ color: 'black' }} key={follower.userId}>
               <div>
-                <Image alt="123" width={40} height={40} src="/follow.jpg" />
-                <p>{user.login}</p>
+                <p>{follower.login}</p>
               </div>
-              {flag && <button type="button">Remove</button>}
+              {isFollow && flag && (
+                <button
+                  onClick={() => onSubscribe(follower.userId!.toString())}
+                  type="button"
+                >
+                  Unsubscribe
+                </button>
+              )}
             </li>
           ))}
         </ul>

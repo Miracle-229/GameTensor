@@ -23,7 +23,6 @@ export const getAdsAction = createAsyncThunk(
         `ad?page=${page}&size=9&sort=creationDate,desc`,
         requestBody
       );
-      console.log(response);
       return response.data;
     } catch (error) {
       console.error('Error fetching ads:', error);
@@ -31,17 +30,3 @@ export const getAdsAction = createAsyncThunk(
     }
   }
 );
-// export const getAdsAction = createAsyncThunk('getGenres', async () => {
-//   const ADS_URL = `${process.env.API_URL}games`;
-//   try {
-//     const response = await axios.get(ADS_URL, {
-//       params: {
-//         key: process.env.API_KEY,
-//       },
-//     });
-//     return response.data.results;
-//   } catch (error) {
-//     console.error('Error fetching genres:', error);
-//     throw error;
-//   }
-// });

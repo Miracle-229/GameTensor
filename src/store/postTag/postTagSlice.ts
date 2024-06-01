@@ -30,7 +30,7 @@ export const postTagSlice = createSlice({
       })
       .addCase(postTagAction.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload as string;
+        state.error = action.error.message as string;
       });
   },
 });

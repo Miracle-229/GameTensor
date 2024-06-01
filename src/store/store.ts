@@ -26,6 +26,8 @@ import { createChatSlice } from './createChat/createChatSlice';
 import { getChatsSlice } from './getChats/getChatsSlice';
 import { createMessageSlice } from './createMessage/createMessageSlice';
 import { getMessagesSlice } from './getMessages/getMessagesSlice';
+import { postTagSlice } from './postTag/postTagSlice';
+import { patchStatusNotifSlice } from './pathStatusNotif/pathStatusNotifSlice';
 
 export const makeStore = () => {
   return configureStore({
@@ -45,8 +47,10 @@ export const makeStore = () => {
       deleteBookmark: deleteBookmarksSlice.reducer,
       bookmark: bookmarkSlice.reducer,
       users: usersSlice.reducer,
+      postTag: postTagSlice.reducer,
       patchStatusAd: patchStatusAdSlice.reducer,
       patchStatusUser: patchStatusUserSlice.reducer,
+      patchStatusNotif: patchStatusNotifSlice.reducer,
       subscribe: subscribeSlice.reducer,
       onSubscribe: onSubscribeSlice.reducer,
       getUserName: getUserNameSlice.reducer,

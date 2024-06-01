@@ -7,7 +7,7 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/store/store';
 import { searchGamesAction } from '@/store/search/searchThunk';
-import { searchData } from '@/store/search/searchSelector';
+import { searchData, searchStatus } from '@/store/search/searchSelector';
 import { imageIdData } from '@/store/imageId/imageIdSelector';
 import { fetchImageId } from '@/store/imageId/imageThunk';
 import { IGameData } from '@/helper/Types/game';
@@ -17,6 +17,7 @@ function Search() {
   const options = useSelector(searchData);
   const imageIdDataState = useSelector(imageIdData);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const statusSearch = useSelector(searchStatus);
 
   useEffect(() => {
     if (options && options.length > 0 && !imageLoaded) {
@@ -33,16 +34,20 @@ function Search() {
   const search = async (query: string) => {
     try {
       const response = await dispatch(searchGamesAction(`${query}%`));
-      if (response.payload && Array.isArray(response.payload)) {
+      if (
+        response.payload.length > 0 &&
+        Array.isArray(response.payload) &&
+        statusSearch
+      ) {
         setIsLoading(true);
       } else {
-        console.log('No data available');
         setIsLoading(false);
       }
     } catch (error) {
       console.error(error);
     }
   };
+
   return (
     <AsyncTypeahead
       id="search-bar"

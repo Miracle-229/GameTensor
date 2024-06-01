@@ -4,36 +4,37 @@ import style from '@/styles/UserId.module.scss';
 import CardAds from '@/components/CardAds';
 import FollowModal from '@/components/FollowModal';
 import { FaSearch } from 'react-icons/fa';
-import { IAuth, IGameData } from '@/helper/Types/game';
+import { IGameData } from '@/helper/Types/game';
 import { useDispatch, useSelector } from 'react-redux';
 import { MdEdit, MdDelete } from 'react-icons/md';
 import { IoMdChatbubbles } from 'react-icons/io';
 import { currentUserData } from '@/store/currentUser/currentUserSelector';
-import { AppDispatch, wrapper } from '@/store/store';
+import { AppDispatch } from '@/store/store';
 import { getAdsAction } from '@/store/ads/adsThunk';
 import { adsData } from '@/store/ads/adsSelector';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { setCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import { getCurrentUserAction } from '@/store/currentUser/currentUserThunk';
 import { getBookmarkAction } from '@/store/getBookmark/getBookmarkThunk';
 import { subscribeAction } from '@/store/subscribe/subscribeThunk';
 import { patchStatusAdAction } from '@/store/patchStatusAd/patchStatusSelectorAd';
-import { GetServerSidePropsContext } from 'next';
 import { getUserNameAction } from '@/store/getUserName/getUserNameThunk';
 import { useAlert } from '@/helper/alertHooks';
 import Alert from '@/components/Alert';
 import { createChatAction } from '@/store/createChat/createChatThunk';
+import { onSubscribeAction } from '@/store/onSubscribe/onSubscribeThunk';
+import { userNameData } from '@/store/getUserName/getUserNameSelector';
 
-// import { onSubscribeAction } from '@/store/onSubscribe/onSubscribeThunk';
-
-export default function IdUserPage({ userData }: { userData: IAuth }) {
-  const user = userData;
+export default function IdUserPage() {
+  const role = getCookie('role');
   const { visibleError, showAlertError, hideAlertError } = useAlert();
   const router = useRouter();
   const { login } = router.query;
+  const user = useSelector(userNameData);
   const dispatch = useDispatch<AppDispatch>();
   const subscribers = user.subscribers || [];
+  const followers = user.followers || [];
   const [activeTab, setActiveTab] = useState('APPROVED');
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -42,19 +43,29 @@ export default function IdUserPage({ userData }: { userData: IAuth }) {
   const flag = login === currentUser.login;
   const ads = useSelector(adsData);
   const [searchTerm, setSearchTerm] = useState('');
-  const [open, setOpen] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [openSubscribers, setOpenSubscribers] = useState(false);
+  const [openFollowers, setOpenFollowers] = useState(false);
   const filteredAds = ads.content
     .slice(0.8)
     .filter((ad: IGameData) =>
       ad.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-  const openModal = () => {
-    setOpen(true);
+  const openModalSubscribers = () => {
+    setOpenSubscribers(true);
   };
 
-  const closeModal = () => {
-    setOpen(false);
+  const closeModalSubscribers = () => {
+    setOpenSubscribers(false);
+  };
+
+  const openModalFollowers = () => {
+    setOpenFollowers(true);
+  };
+
+  const closeModalFollowers = () => {
+    setOpenFollowers(false);
   };
 
   useEffect(() => {
@@ -94,6 +105,7 @@ export default function IdUserPage({ userData }: { userData: IAuth }) {
 
   const subscribe = async (id: string) => {
     await dispatch(subscribeAction(id));
+    dispatch(getUserNameAction(user.login));
   };
 
   const deleteAd = async (adId: number) => {
@@ -110,6 +122,35 @@ export default function IdUserPage({ userData }: { userData: IAuth }) {
     fetchCurrentUser();
   }, [dispatch]);
 
+  const onSubscribe = async (id: string) => {
+    await dispatch(onSubscribeAction(id));
+    dispatch(getUserNameAction(user.login));
+  };
+  useEffect(() => {
+    if (currentUser?.followers) {
+      setIsFollowing(
+        currentUser.followers.some(
+          (follower) => follower.userId === user.userId
+        )
+      );
+    }
+  }, [currentUser, user.userId]);
+
+  const handleSubscribe = () => {
+    if (isFollowing) {
+      onSubscribe(user.userId!.toString());
+      setIsFollowing(false);
+    } else {
+      subscribe(user.userId!.toString());
+      setIsFollowing(true);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof login === 'string') {
+      dispatch(getUserNameAction(login));
+    }
+  }, [login, dispatch]);
   return (
     <Layout title={`${login}`}>
       <div className={style.main}>
@@ -117,18 +158,17 @@ export default function IdUserPage({ userData }: { userData: IAuth }) {
           <div className={style.profile_inf}>
             <p>{user?.login}</p>
             <div className={style.profile_inf_follow}>
-              <button onClick={openModal} type="button">
+              <button onClick={openModalSubscribers} type="button">
                 Followers: {user.subscribers?.length}
               </button>
-              <button type="button">Following: 123</button>
+              <button onClick={openModalFollowers} type="button">
+                Following: {user.followers?.length}
+              </button>
             </div>
-            {login !== currentUser.login && (
+            {login !== currentUser.login && role !== 'ROLE_ADMIN' && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <button
-                  onClick={() => subscribe(user.userId as string)}
-                  type="button"
-                >
-                  Subscribe
+                <button onClick={handleSubscribe} type="button">
+                  {isFollowing ? 'Unsubscribe' : 'Subscribe'}
                 </button>
                 <button
                   type="button"
@@ -143,12 +183,21 @@ export default function IdUserPage({ userData }: { userData: IAuth }) {
         </div>
         {user.status === 'ACTIVE' ? (
           <>
-            {' '}
             <FollowModal
+              onSubscribe={onSubscribe}
+              isFollow={false}
               flag={flag}
               users={subscribers}
-              isOpen={open}
-              onClose={closeModal}
+              isOpen={openSubscribers}
+              onClose={closeModalSubscribers}
+            />
+            <FollowModal
+              onSubscribe={onSubscribe}
+              isFollow
+              flag={flag}
+              users={followers}
+              isOpen={openFollowers}
+              onClose={closeModalFollowers}
             />
             <div className={style.input}>
               <FaSearch size={22} />
@@ -280,27 +329,3 @@ export default function IdUserPage({ userData }: { userData: IAuth }) {
     </Layout>
   );
 }
-
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) => async (context: GetServerSidePropsContext) => {
-    try {
-      const login = context.params?.login as string;
-      const [usersRes] = await Promise.all([
-        store.dispatch(getUserNameAction(login)),
-      ]);
-      const [userData] = await Promise.all([usersRes.payload]);
-      return {
-        props: {
-          userData,
-        },
-      };
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      return {
-        props: {
-          userData: [],
-        },
-      };
-    }
-  }
-);

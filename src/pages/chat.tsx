@@ -46,7 +46,6 @@ function Chat({ initialDialogId }: ChatProps) {
   const [isAddedNewMessage, setIsAddedNewMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  console.log(dataMess.content);
   const loadMoreMessages = async () => {
     if (isLoading || isMaxHeightReached) return;
     setIsLoading(true);
@@ -65,9 +64,7 @@ function Chat({ initialDialogId }: ChatProps) {
           const uniqueMessages = newMessages.content.filter(
             (newMsg: IMessages) =>
               !prevState.content.some(
-                (msg) =>
-                  msg.date === newMsg.date &&
-                  msg.user.userId === newMsg.user.userId
+                (msg) => msg.messageId === newMsg.messageId
               )
           );
           return {
@@ -174,12 +171,19 @@ function Chat({ initialDialogId }: ChatProps) {
   };
 
   useEffect(() => {
-    if (dataMess.content.length <= 20 || isAddedNewMessage)
+    if (isAddedNewMessage)
       if (messagesEndRef && messagesEndRef.current) {
         setIsAddedNewMessage(false);
         messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
       }
   }, [dataMess, isAddedNewMessage]);
+
+  useEffect(() => {
+    if (messagesEndRef && messagesEndRef.current) {
+      setIsAddedNewMessage(false);
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [dataMess, currentDialog]);
 
   useEffect(() => {
     if (containerRef && containerRef.current) {
@@ -192,6 +196,14 @@ function Chat({ initialDialogId }: ChatProps) {
     setCurrentDialog(initialDialogId);
     setCurrentPage(0);
   }, [initialDialogId]);
+
+  useEffect(() => {
+    setDataMess({
+      content: [],
+      pageable: { pageNumber: 0 },
+      totalPages: 0,
+    });
+  }, [currentDialog]);
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -263,16 +275,14 @@ function Chat({ initialDialogId }: ChatProps) {
                 .filter((message) => message.chatId === currentDialog)
                 .map((message) => (
                   <div
-                    key={`${message.date}-${message.chatId}-${message.text}`}
+                    key={message.messageId}
                     className={styles.messageOutput_box}
                   >
                     {message.user.userId === user.userId ? (
-                      // Если сообщение от текущего пользователя
                       <div className={styles.messageOutput_user}>
                         {message.text}
                       </div>
                     ) : (
-                      // Если сообщение от другого пользователя
                       <div className={styles.messageOutput_guest}>
                         {message.text}
                       </div>
@@ -296,7 +306,6 @@ function Chat({ initialDialogId }: ChatProps) {
           </div>
         )}
       </div>
-      {/* <WebSocketComponent chatsData={data} initialDialogId={initialDialogId} /> */}
     </RegistrationLayout>
   );
 }

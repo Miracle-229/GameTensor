@@ -19,11 +19,14 @@ import { bookmarkData } from '@/store/getBookmark/getBookmarkSelector';
 import { postBookmarkAction } from '@/store/postBookmark/postBookmarkThunk';
 import { getBookmarkAction } from '@/store/getBookmark/getBookmarkThunk';
 import { deleteBookmarkAction } from '@/store/deleteBookmark/deleteBookmarkThunk';
-import { getCookie } from 'cookies-next';
 import { useAlert } from '@/helper/alertHooks';
 import Alert from '@/components/Alert';
 import { currentUserData } from '@/store/currentUser/currentUserSelector';
 import { createChatAction } from '@/store/createChat/createChatThunk';
+import { MdEdit } from 'react-icons/md';
+import { useRouter } from 'next/router';
+import { getUserNameAction } from '@/store/getUserName/getUserNameThunk';
+import { userNameData } from '@/store/getUserName/getUserNameSelector';
 
 interface Image {
   original: string;
@@ -31,8 +34,9 @@ interface Image {
 }
 
 export default function IdGamePage({ game }: { game: IGameData }) {
-  const user = getCookie('user');
-  const [isClient, setIsClient] = useState<boolean>(false);
+  const user = useSelector(userNameData);
+  const router = useRouter();
+  const { adId } = router.query;
   const userData = useSelector(currentUserData);
   const { login } = userData;
   const [isBookmarkLoaded, setIsBookmarkLoaded] = useState(false);
@@ -42,16 +46,23 @@ export default function IdGamePage({ game }: { game: IGameData }) {
   const bookmark = useSelector(bookmarkData);
   const { visibleError, showAlertError, hideAlertError } = useAlert();
 
-  const handleChatClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
+  const handleChatClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!user) {
       event.preventDefault();
       showAlertError();
     } else if (typeof game.user.userId === 'string') {
       dispatch(createChatAction(game.user.userId));
+      router.push('/chat');
     }
   };
+
+  const editClick = () => {
+    router.push(`/ad/edit/${adId}`);
+  };
+
+  useEffect(() => {
+    dispatch(getUserNameAction(game.user.login));
+  }, [dispatch, game.user.login]);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -68,9 +79,6 @@ export default function IdGamePage({ game }: { game: IGameData }) {
 
     fetchImages();
   }, [dispatch, game]);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
   const setBookmark = async () => {
     await dispatch(postBookmarkAction(game.adId));
     dispatch(getBookmarkAction());
@@ -130,6 +138,7 @@ export default function IdGamePage({ game }: { game: IGameData }) {
               useTranslate3D={false}
               showPlayButton={false}
               showBullets={false}
+              showFullscreenButton={false}
               thumbnailPosition="bottom"
               slideInterval={2000}
               onSlide={(number) => setIndex(number)}
@@ -155,61 +164,69 @@ export default function IdGamePage({ game }: { game: IGameData }) {
           >
             <div style={{ display: 'flex' }}>
               <span className={style.overview}>Seller:</span>
-              <p style={{ marginLeft: '5px', padding: '0px' }}>
+              <Link
+                href={`/user/${game.user.login}`}
+                style={{
+                  marginLeft: '5px',
+                  padding: '0px',
+                  borderBottom: '1px solid white',
+                }}
+              >
                 {game.user.login}
-              </p>
+              </Link>
             </div>
           </div>
           <div style={{ display: 'flex' }}>
             <span className={style.overview}>Tags:</span>
             {game.tags.map((item) => (
-              <p style={{ marginLeft: '5px' }} key={game.adId}>
+              <p className={style.overview_tags} key={game.adId}>
                 {item.name}
               </p>
             ))}
           </div>
+          <div style={{ display: 'flex' }}>
+            {user.status === 'BLOCKED' && (
+              <p className={style.overview}>User of this ad is blocked</p>
+            )}
+          </div>
           <div className={style.chat_row}>
-            {login !== game.user.login && (
-              <Link
+            {login !== game.user.login && user.status !== 'BLOCKED' && (
+              <button
                 className={style.chat}
+                type="button"
                 onClick={handleChatClick}
-                href="/chat"
               >
                 <IoMdChatbubbles size={25} /> Chat
-              </Link>
+              </button>
             )}
-
-            {user && isClient ? (
-              <>
-                {isBookmarked ? (
-                  <button
-                    style={{
-                      backgroundColor: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                    type="button"
-                    onClick={unsetBookmark}
-                  >
-                    <FaBookmark size={35} className={style.icon} />
-                  </button>
-                ) : (
-                  <button
-                    style={{
-                      backgroundColor: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                    type="button"
-                    onClick={setBookmark}
-                  >
-                    <FaRegBookmark size={35} className={style.icon} />
-                  </button>
-                )}
-              </>
-            ) : (
-              <div />
-            )}
+            <>
+              {isBookmarked ? (
+                <button
+                  className={`${user ? style.bookmark : style.none}`}
+                  type="button"
+                  onClick={unsetBookmark}
+                >
+                  <FaBookmark size={35} className={style.icon} />
+                </button>
+              ) : (
+                <button
+                  className={`${user ? style.bookmark : style.none}`}
+                  type="button"
+                  onClick={setBookmark}
+                >
+                  <FaRegBookmark size={35} className={style.icon} />
+                </button>
+              )}
+              {login === game.user.login && (
+                <button
+                  type="button"
+                  onClick={editClick}
+                  className={style.edit}
+                >
+                  <MdEdit size={35} />
+                </button>
+              )}
+            </>
           </div>
         </div>
       </div>
@@ -232,6 +249,15 @@ export const getServerSideProps = wrapper.getServerSideProps(
     try {
       const id = context.params?.adId as string;
       const game = await store.dispatch(getIdAction(id));
+      const { role } = context.req.cookies;
+      if (game.payload.status === 'BLOCKED' && role !== 'ROLE_ADMIN') {
+        return {
+          redirect: {
+            destination: '/',
+            permanent: false,
+          },
+        };
+      }
       if (!game.payload) {
         return {
           notFound: true,
