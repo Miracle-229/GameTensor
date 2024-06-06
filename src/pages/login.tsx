@@ -15,6 +15,7 @@ import { currentUserData } from '@/store/currentUser/currentUserSelector';
 import { loginError } from '@/store/login/loginSelector';
 import { getUserNameAction } from '@/store/getUserName/getUserNameThunk';
 import { userNameData } from '@/store/getUserName/getUserNameSelector';
+import Image from 'next/image';
 
 function Login() {
   const [login, setLogin] = useState('');
@@ -26,6 +27,7 @@ function Login() {
   const [errorBlock, setErrorBlock] = useState('');
   const errorText = useSelector(loginError) || '';
   const user = useSelector(userNameData);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
     const trimmedLogin = e.target.value.trim().replace(/\s+/g, ' ');
@@ -56,12 +58,12 @@ function Login() {
           localStorage.setItem('user', JSON.stringify(currentUser));
         }
         router.push('/');
+        setIsLoading(true);
       } else {
         setErrorBlock('You have been blocked');
         showAlertError();
       }
     } catch (error) {
-      console.log(error);
       showAlertError();
     }
   };
@@ -95,6 +97,15 @@ function Login() {
         <Link className={style.link} href="/registration">
           Don't have an account yet? Registration
         </Link>
+        {isLoading && (
+          <Image
+            style={{ marginTop: '20px' }}
+            src="/loading.gif"
+            width={70}
+            height={70}
+            alt="loading"
+          />
+        )}
       </div>
       <Alert
         type="error"

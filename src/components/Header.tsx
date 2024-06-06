@@ -33,7 +33,6 @@ import Search from './Search';
 
 function Header() {
   const role = getCookie('role');
-  console.log(role);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const userData = useSelector(currentUserData);
@@ -41,7 +40,6 @@ function Header() {
   const headerRef = useRef<HTMLDivElement>(null);
   const loginFromQuery = router.query.login as string;
   const advertisementsFromQuery = router.pathname;
-  console.log(advertisementsFromQuery);
   const { login } = userData;
   const addAdvertisementLink = role ? '/ad/create' : '/registration';
   const [showUser, setShowUser] = useState<boolean>(false);

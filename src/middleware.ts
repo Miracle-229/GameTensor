@@ -11,7 +11,7 @@ export function middleware(req: NextRequest) {
       '/admin/block',
       '/admin/approve',
       '/admin/create',
-      '/settings',
+      '/user/settings',
     ];
     if (protectedRoutes.includes(req.nextUrl.pathname)) {
       return NextResponse.redirect(new URL('/', req.url));
@@ -36,7 +36,7 @@ export function middleware(req: NextRequest) {
       '/login',
       '/rules',
       '/advertisements',
-      '/settings',
+      '/user/settings',
       '/ad/create',
     ];
     if (protectedRoutes.includes(req.nextUrl.pathname)) {

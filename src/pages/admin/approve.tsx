@@ -19,8 +19,6 @@ function Approve() {
   const dispatch = useDispatch<AppDispatch>();
   const [statusFilter, setStatusFilter] = useState('CREATED');
 
-  console.log(currentPage);
-
   useEffect(() => {
     dispatch(getAdsAction({ status: statusFilter, page: currentPage }));
   }, [dispatch, currentPage, statusFilter]);

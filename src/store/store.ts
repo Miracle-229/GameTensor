@@ -28,6 +28,7 @@ import { createMessageSlice } from './createMessage/createMessageSlice';
 import { getMessagesSlice } from './getMessages/getMessagesSlice';
 import { postTagSlice } from './postTag/postTagSlice';
 import { patchStatusNotifSlice } from './pathStatusNotif/pathStatusNotifSlice';
+import { changePasswordsSlice } from './changePassword/changePasswordSlice';
 
 export const makeStore = () => {
   return configureStore({
@@ -42,6 +43,7 @@ export const makeStore = () => {
       registration: registrationSlice.reducer,
       login: loginSlice.reducer,
       logout: logoutSlice.reducer,
+      changePassword: changePasswordsSlice.reducer,
       currentUser: currentUserSlice.reducer,
       postBookmark: postBookmarksSlice.reducer,
       deleteBookmark: deleteBookmarksSlice.reducer,

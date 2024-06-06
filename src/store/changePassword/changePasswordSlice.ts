@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginAction } from './loginThunk';
+import { changePasswordAction } from './changePasswordThunk';
 
-type loginState = {
+type changePasswordState = {
   data: {
     httpStatus: string;
     message: string;
@@ -11,7 +11,7 @@ type loginState = {
   error: string | null;
 };
 
-const initialState: loginState = {
+const initialState: changePasswordState = {
   data: {
     httpStatus: '',
     message: '',
@@ -21,22 +21,21 @@ const initialState: loginState = {
   error: null,
 };
 
-export const loginSlice = createSlice({
-  name: 'login',
+export const changePasswordsSlice = createSlice({
+  name: 'changePassword',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loginAction.pending, (state) => {
+      .addCase(changePasswordAction.pending, (state) => {
         state.status = 'loading';
-        state.error = null;
       })
-      .addCase(loginAction.fulfilled, (state, action) => {
+      .addCase(changePasswordAction.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.data = action.payload;
         state.error = null;
       })
-      .addCase(loginAction.rejected, (state, action) => {
+      .addCase(changePasswordAction.rejected, (state, action) => {
         state.status = 'failed';
         state.error =
           (action.payload as { message: string }).message ||

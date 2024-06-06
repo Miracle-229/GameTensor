@@ -10,6 +10,9 @@ import { useRouter } from 'next/router';
 import Alert from '@/components/Alert';
 import { useAlert } from '@/helper/alertHooks';
 import { registrationError } from '@/store/registration/registrationSelector';
+import { deleteCookie } from 'cookies-next';
+import { logoutAction } from '@/store/logout/logoutThunk';
+import Image from 'next/image';
 
 function Registration() {
   const [login, setLogin] = useState('');
@@ -21,6 +24,7 @@ function Registration() {
   const dispatch = useDispatch<AppDispatch>();
   const { visibleError, showAlertError, hideAlertError } = useAlert();
   const errorText = useSelector(registrationError) || '';
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     const trimmedLogin = e.target.value.trim().replace(/\s+/g, ' ');
@@ -57,6 +61,10 @@ function Registration() {
           showAlertError();
           return;
         }
+        dispatch(logoutAction());
+        deleteCookie('user');
+        deleteCookie('role');
+        setIsLoading(true);
         router.push('/');
       }
     } catch (error) {
@@ -78,6 +86,7 @@ function Registration() {
             value={login}
             onChange={handleLoginChange}
             required
+            minLength={3}
             placeholder="Login"
             type="text"
           />
@@ -92,6 +101,7 @@ function Registration() {
             value={password}
             onChange={handlePasswordChange}
             required
+            minLength={4}
             placeholder="Password"
             type="password"
           />
@@ -110,6 +120,15 @@ function Registration() {
         <Link className={style.link} href="/login">
           You have already account? Login
         </Link>
+        {isLoading && (
+          <Image
+            style={{ marginTop: '20px' }}
+            src="/loading.gif"
+            width={70}
+            height={70}
+            alt="loading"
+          />
+        )}
       </div>
       <Alert
         type="error"

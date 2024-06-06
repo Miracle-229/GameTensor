@@ -1,18 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IAuth } from '@/helper/Types/game';
 import { registrationAction } from './registrationThunk';
 
 type registrationState = {
-  data: IAuth;
+  data: {
+    httpStatus: string;
+    message: string;
+    errCode: string;
+  };
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 };
 
 const initialState: registrationState = {
   data: {
-    login: '',
-    email: '',
-    password: '',
+    httpStatus: '',
+    message: '',
+    errCode: '',
   },
   status: 'idle',
   error: null,
@@ -31,10 +34,14 @@ export const registrationSlice = createSlice({
       .addCase(registrationAction.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.data = action.payload;
+        state.error = null;
       })
       .addCase(registrationAction.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message as string;
+        state.error =
+          (action.payload as { message: string }).message ||
+          action.error.message ||
+          null;
       });
   },
 });

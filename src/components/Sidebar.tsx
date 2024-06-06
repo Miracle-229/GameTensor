@@ -25,7 +25,6 @@ function Sidebar() {
   };
 
   const logout = () => {
-    console.log('Logging out...');
     closeModal();
   };
 

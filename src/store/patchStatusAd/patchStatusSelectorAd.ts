@@ -9,7 +9,6 @@ export const patchStatusAdAction = createAsyncThunk(
       const response = await api.patch(`ad/${id}/status`, {
         status: key,
       });
-      console.log(response);
       return response.data;
     } catch (error) {
       console.error('Error fetching ads:', error);

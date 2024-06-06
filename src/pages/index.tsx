@@ -21,21 +21,20 @@ export default function Home({ adsData }: { adsData: IAdsData }) {
       setIsBookmarkLoaded(true);
     }
   }, [dispatch, user, isBookmarkLoaded]);
-  useEffect(() => {
-    dispatch(getAdsAction({ value: [], key: 'tags.tagId' }))
-      .then((response) => {
-        console.log(response.payload);
-      })
-      .catch((error) => {
-        console.error('Error fetching types:', error);
-        console.log([]);
-      });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getAdsAction({ value: [], key: 'tags.tagId' }))
+  //     .then((response) => {
+  //       console.log(response.payload);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error fetching types:', error);
+  //       console.log([]);
+  //     });
+  // }, [dispatch]);
 
   useEffect(() => {
     dispatch(getCurrentUserAction());
   }, [dispatch]);
-  console.log(adsData);
   return (
     <Layout title="GameTensor">
       <div className={style.home}>

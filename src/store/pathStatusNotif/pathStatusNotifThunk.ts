@@ -9,7 +9,6 @@ export const patchStatusNotifAction = createAsyncThunk(
         isRead: true,
         notificationId: ids,
       });
-      console.log(response);
       return response.data;
     } catch (error) {
       console.error('Error fetching ads:', error);

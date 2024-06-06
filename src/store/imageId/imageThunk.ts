@@ -12,7 +12,6 @@ export const getImageIdAction = createAsyncThunk(
     );
     const blob = new Blob([response.data], { type: 'image/webp' });
     const imageUrl = URL.createObjectURL(blob);
-    console.log(imageUrl);
     return imageUrl;
   }
 );

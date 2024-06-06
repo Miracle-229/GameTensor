@@ -6,7 +6,6 @@ export const getCurrentUserAction = createAsyncThunk(
   async () => {
     try {
       const response = await api.get('user/current');
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching get current user:', error);
