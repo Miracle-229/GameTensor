@@ -1,0 +1,67 @@
+"filename", "language", "JavaScript", "JSON with Comments", "JSON", "YAML", "TypeScript JSX", "Markdown", "SCSS", "TypeScript", "XML", "CSS", "comment", "blank", "total"
+"d:\work\programming228\web\game-tensor\.eslintrc.js", "JavaScript", 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 1, 61
+"d:\work\programming228\web\game-tensor\.github\workflows\production.yml", "YAML", 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 21
+"d:\work\programming228\web\game-tensor\.prettierrc", "JSON", 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 3, 17
+"d:\work\programming228\web\game-tensor\README.md", "Markdown", 0, 0, 0, 0, 0, 26, 0, 0, 0, 0, 0, 16, 42
+"d:\work\programming228\web\game-tensor\next.config.js", "JavaScript", 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 18
+"d:\work\programming228\web\game-tensor\package-lock.json", "JSON", 0, 0, 11136, 0, 0, 0, 0, 0, 0, 0, 0, 1, 11137
+"d:\work\programming228\web\game-tensor\package.json", "JSON", 0, 0, 52, 0, 0, 0, 0, 0, 0, 0, 0, 1, 53
+"d:\work\programming228\web\game-tensor\public\next.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1
+"d:\work\programming228\web\game-tensor\public\vercel.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1
+"d:\work\programming228\web\game-tensor\src\components\CardAds.tsx", "TypeScript JSX", 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 5, 64
+"d:\work\programming228\web\game-tensor\src\components\CardTag.tsx", "TypeScript JSX", 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 3, 21
+"d:\work\programming228\web\game-tensor\src\components\FollowModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 1, 6, 69
+"d:\work\programming228\web\game-tensor\src\components\Footer.tsx", "TypeScript JSX", 0, 0, 0, 0, 54, 0, 0, 0, 0, 0, 0, 3, 57
+"d:\work\programming228\web\game-tensor\src\components\Header.tsx", "TypeScript JSX", 0, 0, 0, 0, 178, 0, 0, 0, 0, 0, 2, 5, 185
+"d:\work\programming228\web\game-tensor\src\components\Search.tsx", "TypeScript JSX", 0, 0, 0, 0, 73, 0, 0, 0, 0, 0, 2, 4, 79
+"d:\work\programming228\web\game-tensor\src\components\TagsSearch.tsx", "TypeScript JSX", 0, 0, 0, 0, 86, 0, 0, 0, 0, 0, 0, 6, 92
+"d:\work\programming228\web\game-tensor\src\helper\Constants\images_id.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 1, 15
+"d:\work\programming228\web\game-tensor\src\helper\Constants\mockAds.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 26, 0, 0, 0, 1, 27
+"d:\work\programming228\web\game-tensor\src\helper\Constants\mockFollow.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 1, 7
+"d:\work\programming228\web\game-tensor\src\helper\Constants\mockRules.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 125, 0, 0, 0, 1, 126
+"d:\work\programming228\web\game-tensor\src\helper\Constants\mockTags.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 1, 9
+"d:\work\programming228\web\game-tensor\src\helper\Types\game.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 42, 0, 0, 0, 4, 46
+"d:\work\programming228\web\game-tensor\src\layouts\Layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 2, 23
+"d:\work\programming228\web\game-tensor\src\layouts\RegistrationLayout.tsx", "TypeScript JSX", 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 2, 21
+"d:\work\programming228\web\game-tensor\src\pages\_app.tsx", "TypeScript JSX", 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 3, 10
+"d:\work\programming228\web\game-tensor\src\pages\_document.tsx", "TypeScript JSX", 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 2, 14
+"d:\work\programming228\web\game-tensor\src\pages\ad\[id].tsx", "TypeScript JSX", 0, 0, 0, 0, 119, 0, 0, 0, 0, 0, 22, 4, 145
+"d:\work\programming228\web\game-tensor\src\pages\ad\create.tsx", "TypeScript JSX", 0, 0, 0, 0, 76, 0, 0, 0, 0, 0, 2, 5, 83
+"d:\work\programming228\web\game-tensor\src\pages\index.tsx", "TypeScript JSX", 0, 0, 0, 0, 89, 0, 0, 0, 0, 0, 13, 3, 105
+"d:\work\programming228\web\game-tensor\src\pages\login.tsx", "TypeScript JSX", 0, 0, 0, 0, 28, 0, 0, 0, 0, 0, 1, 3, 32
+"d:\work\programming228\web\game-tensor\src\pages\registration.tsx", "TypeScript JSX", 0, 0, 0, 0, 57, 0, 0, 0, 0, 0, 2, 5, 64
+"d:\work\programming228\web\game-tensor\src\pages\rules.tsx", "TypeScript JSX", 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 3, 39
+"d:\work\programming228\web\game-tensor\src\pages\user\id.tsx", "TypeScript JSX", 0, 0, 0, 0, 46, 0, 0, 0, 0, 0, 0, 3, 49
+"d:\work\programming228\web\game-tensor\src\pages\user\settings.tsx", "TypeScript JSX", 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 3, 27
+"d:\work\programming228\web\game-tensor\src\store\ads\adsSelector.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 4, 9
+"d:\work\programming228\web\game-tensor\src\store\ads\adsSlice.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 1, 7, 51
+"d:\work\programming228\web\game-tensor\src\store\ads\adsThunk.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 15, 4, 35
+"d:\work\programming228\web\game-tensor\src\store\id\idSelector.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 4, 9
+"d:\work\programming228\web\game-tensor\src\store\id\idSlice.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 1, 7, 51
+"d:\work\programming228\web\game-tensor\src\store\id\idThunk.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 2, 18
+"d:\work\programming228\web\game-tensor\src\store\imageId\imageIdSelector.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 4
+"d:\work\programming228\web\game-tensor\src\store\imageId\imageSlice.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 6, 26
+"d:\work\programming228\web\game-tensor\src\store\imageId\imageThunk.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0, 3, 27
+"d:\work\programming228\web\game-tensor\src\store\search\searchSelector.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 5, 17
+"d:\work\programming228\web\game-tensor\src\store\search\searchSlice.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 1, 7, 51
+"d:\work\programming228\web\game-tensor\src\store\search\searchThunk.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 0, 2, 35
+"d:\work\programming228\web\game-tensor\src\store\store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 1, 4, 34
+"d:\work\programming228\web\game-tensor\src\store\tags\tagsSelector.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 4, 9
+"d:\work\programming228\web\game-tensor\src\store\tags\tagsSlice.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 1, 7, 51
+"d:\work\programming228\web\game-tensor\src\store\tags\tagsThunk.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 2, 18
+"d:\work\programming228\web\game-tensor\src\styles\CardAds.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 1, 33
+"d:\work\programming228\web\game-tensor\src\styles\CardTag.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 1, 16
+"d:\work\programming228\web\game-tensor\src\styles\CreateAds.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 116, 0, 0, 0, 0, 2, 118
+"d:\work\programming228\web\game-tensor\src\styles\FollowModal.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 54, 0, 0, 0, 0, 1, 55
+"d:\work\programming228\web\game-tensor\src\styles\Footer.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 60, 0, 0, 0, 0, 1, 61
+"d:\work\programming228\web\game-tensor\src\styles\GameId.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 120, 0, 0, 0, 0, 2, 122
+"d:\work\programming228\web\game-tensor\src\styles\Header.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 142, 0, 0, 0, 0, 7, 149
+"d:\work\programming228\web\game-tensor\src\styles\Home.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 65, 0, 0, 0, 0, 1, 66
+"d:\work\programming228\web\game-tensor\src\styles\Registration.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 1, 59
+"d:\work\programming228\web\game-tensor\src\styles\Rules.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 26, 0, 0, 0, 0, 1, 27
+"d:\work\programming228\web\game-tensor\src\styles\Settings.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 43, 0, 0, 0, 0, 1, 44
+"d:\work\programming228\web\game-tensor\src\styles\TagsSearch.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 1, 42
+"d:\work\programming228\web\game-tensor\src\styles\UserId.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 91, 0, 0, 0, 0, 2, 93
+"d:\work\programming228\web\game-tensor\src\styles\globals.css", "CSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 251, 0, 13, 264
+"d:\work\programming228\web\game-tensor\tsconfig.json", "JSON with Comments", 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 23
+"Total", "-", 64, 22, 11202, 21, 1064, 26, 863, 576, 2, 251, 76, 210, 14377

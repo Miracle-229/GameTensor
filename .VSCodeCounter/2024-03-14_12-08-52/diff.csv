@@ -1,0 +1,66 @@
+"filename", "language", "JavaScript", "JSON", "TypeScript", "SCSS", "CSS", "TypeScript JSX", "comment", "blank", "total"
+"d:\work\programming228\web\game-tensor\.eslintrc.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 1
+"d:\work\programming228\web\game-tensor\next.config.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 1
+"d:\work\programming228\web\game-tensor\package-lock.json", "JSON", 0, 855, 0, 0, 0, 0, 0, 0, 855
+"d:\work\programming228\web\game-tensor\package.json", "JSON", 0, 5, 0, 0, 0, 0, 0, 0, 5
+"d:\work\programming228\web\game-tensor\src\components\CardAds.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 2, 0, -1, 1
+"d:\work\programming228\web\game-tensor\src\components\Header.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 45, 0, -1, 44
+"d:\work\programming228\web\game-tensor\src\components\Search.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 8, 0, 1, 9
+"d:\work\programming228\web\game-tensor\src\components\Sidebar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 60, 2, 7, 69
+"d:\work\programming228\web\game-tensor\src\components\TagsSearch.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 5, 2, 2, 9
+"d:\work\programming228\web\game-tensor\src\helper\Constants\mockAds.ts", "TypeScript", 0, 0, 12, 0, 0, 0, 135, 0, 147
+"d:\work\programming228\web\game-tensor\src\helper\Constants\mockFollow.ts", "TypeScript", 0, 0, -6, 0, 0, 0, 0, -1, -7
+"d:\work\programming228\web\game-tensor\src\helper\Constants\mockImagesTags.ts", "TypeScript", 0, 0, 7, 0, 0, 0, 0, 1, 8
+"d:\work\programming228\web\game-tensor\src\helper\Constants\mockUsers.ts", "TypeScript", 0, 0, 10, 0, 0, 0, 0, 1, 11
+"d:\work\programming228\web\game-tensor\src\helper\Types\game.ts", "TypeScript", 0, 0, 17, 0, 0, 0, 0, 3, 20
+"d:\work\programming228\web\game-tensor\src\interceptors\api.ts", "TypeScript", 0, 0, 53, 0, 0, 0, 6, 7, 66
+"d:\work\programming228\web\game-tensor\src\layouts\AdminLayot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 19, 0, 2, 21
+"d:\work\programming228\web\game-tensor\src\layouts\Layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 17, 2, 2, 21
+"d:\work\programming228\web\game-tensor\src\pages\ad\[adId].tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 123, 23, 6, 152
+"d:\work\programming228\web\game-tensor\src\pages\ad\[id].tsx", "TypeScript JSX", 0, 0, 0, 0, 0, -119, -22, -4, -145
+"d:\work\programming228\web\game-tensor\src\pages\ad\create.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 72, 0, 6, 78
+"d:\work\programming228\web\game-tensor\src\pages\admin\approve.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 96, 11, 9, 116
+"d:\work\programming228\web\game-tensor\src\pages\admin\block.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 61, 0, 5, 66
+"d:\work\programming228\web\game-tensor\src\pages\admin\create.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 15, 0, 3, 18
+"d:\work\programming228\web\game-tensor\src\pages\advertisements.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 52, 0, 5, 57
+"d:\work\programming228\web\game-tensor\src\pages\index.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, -22, 0, 0, -22
+"d:\work\programming228\web\game-tensor\src\pages\login.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 28, 0, 1, 29
+"d:\work\programming228\web\game-tensor\src\pages\registration.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 33, -1, 0, 32
+"d:\work\programming228\web\game-tensor\src\pages\user\[userId].tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 91, 0, 4, 95
+"d:\work\programming228\web\game-tensor\src\pages\user\id.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, -46, 0, -3, -49
+"d:\work\programming228\web\game-tensor\src\store\ads\adsSelector.ts", "TypeScript", 0, 0, 1, 0, 0, 0, 0, 1, 2
+"d:\work\programming228\web\game-tensor\src\store\ads\adsSlice.ts", "TypeScript", 0, 0, -1, 0, 0, 0, 0, -1, -2
+"d:\work\programming228\web\game-tensor\src\store\ads\adsThunk.ts", "TypeScript", 0, 0, 12, 0, 0, 0, -1, -2, 9
+"d:\work\programming228\web\game-tensor\src\store\currentUser\currentUserSelector.ts", "TypeScript", 0, 0, 15, 0, 0, 0, 0, 5, 20
+"d:\work\programming228\web\game-tensor\src\store\currentUser\currentUserSlice.ts", "TypeScript", 0, 0, 46, 0, 0, 0, 1, 6, 53
+"d:\work\programming228\web\game-tensor\src\store\currentUser\currentUserThunk.ts", "TypeScript", 0, 0, 15, 0, 0, 0, 0, 2, 17
+"d:\work\programming228\web\game-tensor\src\store\id\idSlice.ts", "TypeScript", 0, 0, -1, 0, 0, 0, 0, -1, -2
+"d:\work\programming228\web\game-tensor\src\store\id\idThunk.ts", "TypeScript", 0, 0, -4, 0, 0, 0, 0, 0, -4
+"d:\work\programming228\web\game-tensor\src\store\imageId\imageSlice.ts", "TypeScript", 0, 0, -1, 0, 0, 0, 0, -1, -2
+"d:\work\programming228\web\game-tensor\src\store\imageId\imageThunk.ts", "TypeScript", 0, 0, 1, 0, 0, 0, 0, 0, 1
+"d:\work\programming228\web\game-tensor\src\store\login\loginSelector.ts", "TypeScript", 0, 0, 15, 0, 0, 0, 0, 5, 20
+"d:\work\programming228\web\game-tensor\src\store\login\loginSlice.ts", "TypeScript", 0, 0, 36, 0, 0, 0, 0, 5, 41
+"d:\work\programming228\web\game-tensor\src\store\login\loginThunk.ts", "TypeScript", 0, 0, 20, 0, 0, 0, 0, 2, 22
+"d:\work\programming228\web\game-tensor\src\store\logout\logoutSlice.ts", "TypeScript", 0, 0, 32, 0, 0, 0, 0, 5, 37
+"d:\work\programming228\web\game-tensor\src\store\logout\logoutThunk.ts", "TypeScript", 0, 0, 14, 0, 0, 0, 0, 2, 16
+"d:\work\programming228\web\game-tensor\src\store\registration\registrationSelector.ts", "TypeScript", 0, 0, 15, 0, 0, 0, 0, 5, 20
+"d:\work\programming228\web\game-tensor\src\store\registration\registrationSlice.ts", "TypeScript", 0, 0, 37, 0, 0, 0, 0, 4, 41
+"d:\work\programming228\web\game-tensor\src\store\registration\registrationThunk.ts", "TypeScript", 0, 0, 19, 0, 0, 0, 0, 2, 21
+"d:\work\programming228\web\game-tensor\src\store\search\searchSlice.ts", "TypeScript", 0, 0, -1, 0, 0, 0, 0, -1, -2
+"d:\work\programming228\web\game-tensor\src\store\search\searchThunk.ts", "TypeScript", 0, 0, 5, 0, 0, 0, 1, 0, 6
+"d:\work\programming228\web\game-tensor\src\store\store.ts", "TypeScript", 0, 0, 7, 0, 0, 0, 0, -1, 6
+"d:\work\programming228\web\game-tensor\src\store\tags\tagsSlice.ts", "TypeScript", 0, 0, -1, 0, 0, 0, 0, -1, -2
+"d:\work\programming228\web\game-tensor\src\store\tags\tagsThunk.ts", "TypeScript", 0, 0, -5, 0, 0, 0, 0, 0, -5
+"d:\work\programming228\web\game-tensor\src\styles\AdminApprove.module.scss", "SCSS", 0, 0, 0, 90, 0, 0, 0, 2, 92
+"d:\work\programming228\web\game-tensor\src\styles\AdminBlock.module.scss", "SCSS", 0, 0, 0, 74, 0, 0, 0, 1, 75
+"d:\work\programming228\web\game-tensor\src\styles\Advertisements.module.scss", "SCSS", 0, 0, 0, 63, 0, 0, 0, 2, 65
+"d:\work\programming228\web\game-tensor\src\styles\CreateAds.module.scss", "SCSS", 0, 0, 0, 3, 0, 0, 0, 0, 3
+"d:\work\programming228\web\game-tensor\src\styles\CreateTag.module.scss", "SCSS", 0, 0, 0, 41, 0, 0, 0, 1, 42
+"d:\work\programming228\web\game-tensor\src\styles\FollowModal.module.scss", "SCSS", 0, 0, 0, 4, 0, 0, 0, 0, 4
+"d:\work\programming228\web\game-tensor\src\styles\GameId.module.scss", "SCSS", 0, 0, 0, 3, 0, 0, 0, 0, 3
+"d:\work\programming228\web\game-tensor\src\styles\Header.module.scss", "SCSS", 0, 0, 0, 35, 0, 0, 0, 1, 36
+"d:\work\programming228\web\game-tensor\src\styles\Sidebar.module.scss", "SCSS", 0, 0, 0, 147, 0, 0, 0, 4, 151
+"d:\work\programming228\web\game-tensor\src\styles\TagsSearch.module.scss", "SCSS", 0, 0, 0, 35, 0, 0, 0, 0, 35
+"d:\work\programming228\web\game-tensor\src\styles\UserId.module.scss", "SCSS", 0, 0, 0, 20, 0, 0, 0, 1, 21
+"d:\work\programming228\web\game-tensor\src\styles\globals.css", "CSS", 0, 0, 0, 0, 5, 0, 0, 1, 6
+"Total", "-", 2, 860, 369, 515, 5, 540, 159, 104, 2554

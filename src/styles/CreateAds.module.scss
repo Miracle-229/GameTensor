@@ -1,0 +1,120 @@
+.main {
+  padding: 40px 70px;
+  button {
+    margin-top: 30px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 24px;
+    display: block;
+    background-color: #424242;
+    border: none;
+    cursor: pointer;
+  }
+  textarea {
+    margin-top: 20px;
+    resize: none;
+    max-width: 300px;
+    font-size: 17px;
+    width: 300px;
+    min-height: 150px;
+    background-color: #c2c2c2;
+    color: black;
+    border-radius: 15px;
+    padding: 10px 15px;
+  }
+  h1 {
+    display: inline-block;
+    padding-bottom: 5px;
+    font-size: 35px;
+    border-bottom: 2px solid white;
+  }
+  h3 {
+    margin-top: 40px;
+    font-size: 26px;
+  }
+  input {
+    margin-top: 15px;
+    border: none;
+    outline: none;
+    padding: 5px 30px;
+    width: 300px;
+    border-radius: 30px;
+    background-color: #c2c2c2;
+    color: black;
+    font-size: 18px;
+  }
+  label {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    padding: 10px 30px;
+    width: 300px;
+    border-radius: 30px;
+    background-color: #7f7f7f;
+    color: white;
+    font-size: 18px;
+  }
+}
+.row_images {
+  margin-top: 20px;
+  display: flex;
+  > *:not(:first-child) {
+    margin-left: 20px;
+  }
+  img {
+    border-radius: 20px;
+  }
+}
+.imageContainer {
+  position: relative;
+}
+
+.removeButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: none;
+  border-radius: 0px !important;
+  border-bottom-left-radius: 10px !important;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 5px !important;
+  margin-top: 0px !important;
+}
+.costume_input {
+  margin-top: 40px;
+}
+.noinput {
+  display: none;
+}
+.photos_inf {
+  color: #5b5a5a;
+  font-weight: bold;
+  margin-top: 10px;
+}
+@media (max-width: 768px) {
+  .main {
+    padding: 40px 40px;
+  }
+}
+@media (max-width: 426px) {
+  .row_images {
+    display: grid;
+    grid-template-columns: 3fr 3fr 3fr;
+    gap: 20px;
+    > *:not(:first-child) {
+      margin-left: 0px;
+    }
+  }
+}
+@media (max-width: 376px) {
+  .main {
+    padding: 20px;
+  }
+  .row_images {
+    img {
+      width: 90px;
+      height: 90px;
+    }
+  }
+}

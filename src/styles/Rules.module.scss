@@ -1,0 +1,26 @@
+.main {
+  padding: 30px 70px;
+  font-size: 17px;
+  h1 {
+    font-size: 36px;
+    border-bottom: 1px solid white;
+    display: inline-block;
+    padding-bottom: 5px;
+  }
+  h2 {
+    margin-top: 20px;
+  }
+  th {
+    padding-bottom: 10px;
+    border-bottom: 1px solid white;
+  }
+  td {
+    padding: 10px 10px 10px 0px;
+    border-bottom: 1px solid white;
+  }
+}
+@media (max-width: 426px) {
+  .main {
+    padding: 20px 35px;
+  }
+}

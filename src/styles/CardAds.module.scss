@@ -1,22 +1,35 @@
 .main {
   max-width: 265px;
+  max-height: 265px;
   background-color: #2f2f2f;
   border-radius: 30px;
+}
+.main:hover {
+  background-color: #5d5c5c;
 }
 .image {
   border-radius: 30px;
 }
+.link {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
 .ads_inf_main {
-  padding: 10px 15px 0px 15px;
+  padding: 10px 15px 15px 15px;
 }
 .active {
   display: flex;
   justify-content: space-between;
+  margin-top: 10px;
 }
 .inf {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  h3 {
+    margin-top: 10px !important;
+  }
 }
 .icon {
   font-size: 30px;
@@ -28,4 +41,12 @@
   > *:not(:first-child) {
     margin-left: 25px;
   }
+}
+.bookmark {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.none {
+  display: none;
 }

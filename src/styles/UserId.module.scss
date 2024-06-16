@@ -1,0 +1,165 @@
+.main {
+  padding: 80px 90px;
+}
+.profile {
+  display: flex;
+  justify-content: space-between;
+  max-width: 380px;
+  width: 380px;
+}
+.profile_inf {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  p {
+    font-size: 30px;
+  }
+  button {
+    background-color: white;
+    color: black;
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 30px;
+    cursor: pointer;
+  }
+}
+.profile_inf_follow {
+  max-width: 235px;
+  width: 235px;
+  display: flex;
+  justify-content: space-between;
+  button {
+    cursor: pointer;
+    padding: 12px 5px;
+    font-size: 16px;
+    background-color: transparent;
+    border: none;
+    color: #7f7f7f;
+  }
+}
+.input {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  input {
+    color: black;
+    margin-left: 10px;
+    width: 350px;
+    padding: 7px 20px;
+    background-color: #c2c2c2;
+    border: none;
+    border-radius: 15px;
+  }
+}
+.ads {
+  margin-top: 50px;
+  display: grid;
+  grid-template-columns: 3fr 3fr 3fr 3fr;
+  row-gap: 40px;
+}
+.tabs {
+  margin-top: 25px;
+  display: flex;
+  justify-content: space-evenly;
+}
+.tab {
+  background-color: transparent;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+}
+.tab_active {
+  background-color: transparent;
+  border: none;
+  font-size: 28px;
+  border-bottom: 3px solid white;
+  padding-bottom: 5px;
+  cursor: pointer;
+}
+.adiId_buttons {
+  display: flex;
+  justify-content: space-between;
+  max-width: 265px;
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+}
+.chat {
+  margin-top: 20px;
+  background-color: #2f2f2f !important;
+  border: none;
+  color: white !important;
+  padding: 5px 60px;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 1024px) {
+  .ads {
+    grid-template-columns: 4fr 4fr 4fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .ads {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    column-gap: 10px;
+    row-gap: 40px;
+  }
+}
+@media (max-width: 426px) {
+  .main {
+    padding: 60px 30px;
+  }
+  .ads {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+@media (max-width: 376px) {
+  .main {
+    padding: 60px 20px;
+  }
+  .profile {
+    width: 350px;
+  }
+  .tab {
+    font-size: 24px;
+  }
+  .tab_active {
+    font-size: 24px;
+  }
+}
+@media (max-width: 361px) {
+  .main {
+    padding: 60px 10px;
+  }
+  .profile {
+    justify-content: space-evenly;
+  }
+  .profile_inf {
+    p {
+      font-size: 25px;
+    }
+  }
+  .profile_inf_follow {
+    width: 210px;
+    button {
+      font-size: 14px;
+    }
+  }
+  .tab {
+    font-size: 22px;
+  }
+  .tab_active {
+    font-size: 22px;
+  }
+}

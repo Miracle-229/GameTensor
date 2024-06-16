@@ -24,12 +24,13 @@
 }
 .ads_main {
   display: flex;
-  max-width: 900px;
+  max-width: 1000px;
+  width: 100%;
   justify-content: space-evenly;
   flex-wrap: wrap;
   & > * {
     margin-top: 40px;
-  }   
+  }
 }
 @media (max-width: 431px) {
   .slogan {

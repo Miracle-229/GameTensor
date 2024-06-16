@@ -1,9 +1,28 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable import/no-extraneous-dependencies */
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { LayoutProps } from '@/helper/Types/game';
+import { currentUserData } from '@/store/currentUser/currentUserSelector';
+import { logoutAction } from '@/store/logout/logoutThunk';
+import { AppDispatch } from '@/store/store';
 import Head from 'next/head';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Layout({ children, title }: LayoutProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  const currentUser = useSelector(currentUserData);
+  const role =
+    Array.isArray(currentUser.roles) &&
+    currentUser.roles.length > 0 &&
+    currentUser.roles[0];
+
+  useEffect(() => {
+    if (currentUser.status === 'BLOCKED') {
+      dispatch(logoutAction());
+    }
+  }, [dispatch, currentUser.status]);
   return (
     <>
       <Head>
@@ -13,7 +32,7 @@ export default function Layout({ children, title }: LayoutProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="page">
-        <Header />
+        {!role || role !== 'ROLE_ADMIN' ? <Header /> : <div />}
         {children}
         <Footer />
       </div>

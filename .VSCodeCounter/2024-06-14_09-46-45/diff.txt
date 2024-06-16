@@ -1,0 +1,185 @@
+Date : 2024-06-14 09:46:45
+Directory : d:\work\programming228\web\game-tensor
+Total : 109 files,  4535 codes, -11 comments, 364 blanks, all 4888 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| TypeScript JSX |         25 |      1,812 |         -4 |        121 |      1,929 |
+| TypeScript     |         68 |      1,458 |         -8 |        204 |      1,654 |
+| JSON           |          2 |        738 |          0 |          0 |        738 |
+| SCSS           |         12 |        522 |          1 |         38 |        561 |
+| CSS            |          1 |          4 |          0 |          1 |          5 |
+| JavaScript     |          1 |          1 |          0 |          0 |          1 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                      | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                         |        109 |      4,535 |        -11 |        364 |      4,888 |
+| . (Files)                                                                                 |          3 |        739 |          0 |          0 |        739 |
+| src                                                                                       |        106 |      3,796 |        -11 |        364 |      4,149 |
+| src (Files)                                                                               |          1 |         45 |          0 |          4 |         49 |
+| src\components                                                                            |          7 |        243 |          0 |         13 |        256 |
+| src\helper                                                                                |          3 |         88 |          2 |         15 |        105 |
+| src\helper (Files)                                                                        |          1 |         28 |          1 |          6 |         35 |
+| src\helper\Constants                                                                      |          1 |         20 |          1 |          5 |         26 |
+| src\helper\Types                                                                          |          1 |         40 |          0 |          4 |         44 |
+| src\interceptors                                                                          |          1 |         -1 |          0 |          1 |          0 |
+| src\layouts                                                                               |          2 |         18 |          0 |         -2 |         16 |
+| src\pages                                                                                 |         16 |      1,551 |         -4 |        110 |      1,657 |
+| src\pages (Files)                                                                         |          6 |        530 |          3 |         38 |        571 |
+| src\pages\ad                                                                              |          3 |        488 |          2 |         40 |        530 |
+| src\pages\ad (Files)                                                                      |          2 |        176 |          0 |         13 |        189 |
+| src\pages\ad\edit                                                                         |          1 |        312 |          2 |         27 |        341 |
+| src\pages\admin                                                                           |          3 |        194 |         -9 |         11 |        196 |
+| src\pages\chat                                                                            |          1 |         35 |          0 |          4 |         39 |
+| src\pages\user                                                                            |          3 |        304 |          0 |         17 |        321 |
+| src\store                                                                                 |         63 |      1,326 |        -10 |        184 |      1,500 |
+| src\store (Files)                                                                         |          1 |         40 |          0 |          0 |         40 |
+| src\store\ads                                                                             |          2 |         32 |        -14 |          0 |         18 |
+| src\store\changePassword                                                                  |          3 |         82 |          0 |         11 |         93 |
+| src\store\createAd                                                                        |          3 |         58 |          0 |         10 |         68 |
+| src\store\createChat                                                                      |          2 |         45 |          0 |          6 |         51 |
+| src\store\createMessage                                                                   |          2 |         45 |          0 |          6 |         51 |
+| src\store\currentUser                                                                     |          1 |         -1 |          0 |          0 |         -1 |
+| src\store\deleteBookmark                                                                  |          2 |         42 |          0 |          6 |         48 |
+| src\store\editAd                                                                          |          3 |         58 |          0 |         10 |         68 |
+| src\store\getBookmark                                                                     |          3 |         87 |          0 |         12 |         99 |
+| src\store\getChats                                                                        |          3 |         76 |          1 |         13 |         90 |
+| src\store\getMessages                                                                     |          3 |         98 |          1 |         13 |        112 |
+| src\store\getNotif                                                                        |          3 |         79 |          1 |         13 |         93 |
+| src\store\getNotifCount                                                                   |          3 |         70 |          1 |         13 |         84 |
+| src\store\getUserName                                                                     |          3 |         75 |          1 |         13 |         89 |
+| src\store\getUsers                                                                        |          3 |         61 |          0 |         12 |         73 |
+| src\store\imageId                                                                         |          1 |         -1 |          0 |          0 |         -1 |
+| src\store\login                                                                           |          3 |          5 |          0 |         -1 |          4 |
+| src\store\onSubscribe                                                                     |          2 |         43 |          0 |          6 |         49 |
+| src\store\patchStatusAd                                                                   |          2 |         45 |          0 |          6 |         51 |
+| src\store\patchStatusUser                                                                 |          2 |         45 |          0 |          6 |         51 |
+| src\store\pathStatusNotif                                                                 |          2 |         45 |          0 |          6 |         51 |
+| src\store\postBookmark                                                                    |          2 |         44 |          0 |          6 |         50 |
+| src\store\postTag                                                                         |          3 |         78 |          0 |         11 |         89 |
+| src\store\registration                                                                    |          2 |         11 |          0 |          0 |         11 |
+| src\store\search                                                                          |          2 |         21 |         -1 |          0 |         20 |
+| src\store\subscribe                                                                       |          2 |         43 |          0 |          6 |         49 |
+| src\styles                                                                                |         13 |        526 |          1 |         39 |        566 |
++-------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                  | language       | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| d:\work\programming228\web\game-tensor\next.config.js                                     | JavaScript     |          1 |          0 |          0 |          1 |
+| d:\work\programming228\web\game-tensor\package-lock.json                                  | JSON           |        731 |          0 |          0 |        731 |
+| d:\work\programming228\web\game-tensor\package.json                                       | JSON           |          7 |          0 |          0 |          7 |
+| d:\work\programming228\web\game-tensor\src\components\Alert.tsx                           | TypeScript JSX |         29 |          0 |          6 |         35 |
+| d:\work\programming228\web\game-tensor\src\components\CardAds.tsx                         | TypeScript JSX |         62 |          1 |         -1 |         62 |
+| d:\work\programming228\web\game-tensor\src\components\FollowModal.tsx                     | TypeScript JSX |         20 |          0 |          0 |         20 |
+| d:\work\programming228\web\game-tensor\src\components\Header.tsx                          | TypeScript JSX |         91 |          0 |          6 |         97 |
+| d:\work\programming228\web\game-tensor\src\components\Search.tsx                          | TypeScript JSX |         17 |          0 |          1 |         18 |
+| d:\work\programming228\web\game-tensor\src\components\Sidebar.tsx                         | TypeScript JSX |          7 |          0 |          0 |          7 |
+| d:\work\programming228\web\game-tensor\src\components\TagsSearch.tsx                      | TypeScript JSX |         17 |         -1 |          1 |         17 |
+| d:\work\programming228\web\game-tensor\src\helper\Constants\timeFunctions.ts              | TypeScript     |         20 |          1 |          5 |         26 |
+| d:\work\programming228\web\game-tensor\src\helper\Types\game.ts                           | TypeScript     |         40 |          0 |          4 |         44 |
+| d:\work\programming228\web\game-tensor\src\helper\alertHooks.ts                           | TypeScript     |         28 |          1 |          6 |         35 |
+| d:\work\programming228\web\game-tensor\src\interceptors\api.ts                            | TypeScript     |         -1 |          0 |          1 |          0 |
+| d:\work\programming228\web\game-tensor\src\layouts\Layout.tsx                             | TypeScript JSX |          6 |          0 |         -2 |          4 |
+| d:\work\programming228\web\game-tensor\src\layouts\RegistrationLayout.tsx                 | TypeScript JSX |         12 |          0 |          0 |         12 |
+| d:\work\programming228\web\game-tensor\src\middleware.ts                                  | TypeScript     |         45 |          0 |          4 |         49 |
+| d:\work\programming228\web\game-tensor\src\pages\ad\[adId].tsx                            | TypeScript JSX |        127 |          0 |         10 |        137 |
+| d:\work\programming228\web\game-tensor\src\pages\ad\create.tsx                            | TypeScript JSX |         49 |          0 |          3 |         52 |
+| d:\work\programming228\web\game-tensor\src\pages\ad\edit\[adId].tsx                       | TypeScript JSX |        312 |          2 |         27 |        341 |
+| d:\work\programming228\web\game-tensor\src\pages\admin\approve.tsx                        | TypeScript JSX |        109 |         -9 |          7 |        107 |
+| d:\work\programming228\web\game-tensor\src\pages\admin\block.tsx                          | TypeScript JSX |         34 |          0 |          3 |         37 |
+| d:\work\programming228\web\game-tensor\src\pages\admin\create.tsx                         | TypeScript JSX |         51 |          0 |          1 |         52 |
+| d:\work\programming228\web\game-tensor\src\pages\advertisements.tsx                       | TypeScript JSX |         49 |          1 |          4 |         54 |
+| d:\work\programming228\web\game-tensor\src\pages\bookmarks.tsx                            | TypeScript JSX |         42 |          0 |          3 |         45 |
+| d:\work\programming228\web\game-tensor\src\pages\chat.tsx                                 | TypeScript JSX |        319 |          4 |         22 |        345 |
+| d:\work\programming228\web\game-tensor\src\pages\chat\[chatId].tsx                        | TypeScript JSX |         35 |          0 |          4 |         39 |
+| d:\work\programming228\web\game-tensor\src\pages\index.tsx                                | TypeScript JSX |         14 |         -3 |          1 |         12 |
+| d:\work\programming228\web\game-tensor\src\pages\login.tsx                                | TypeScript JSX |         56 |          1 |          5 |         62 |
+| d:\work\programming228\web\game-tensor\src\pages\registration.tsx                         | TypeScript JSX |         50 |          0 |          3 |         53 |
+| d:\work\programming228\web\game-tensor\src\pages\user\[login].tsx                         | TypeScript JSX |        327 |          0 |         20 |        347 |
+| d:\work\programming228\web\game-tensor\src\pages\user\[userId].tsx                        | TypeScript JSX |        -91 |          0 |         -4 |        -95 |
+| d:\work\programming228\web\game-tensor\src\pages\user\settings.tsx                        | TypeScript JSX |         68 |          0 |          1 |         69 |
+| d:\work\programming228\web\game-tensor\src\store\ads\adsSlice.ts                          | TypeScript     |         29 |          0 |          0 |         29 |
+| d:\work\programming228\web\game-tensor\src\store\ads\adsThunk.ts                          | TypeScript     |          3 |        -14 |          0 |        -11 |
+| d:\work\programming228\web\game-tensor\src\store\changePassword\changePasswordSelector.ts | TypeScript     |         15 |          0 |          5 |         20 |
+| d:\work\programming228\web\game-tensor\src\store\changePassword\changePasswordSlice.ts    | TypeScript     |         43 |          0 |          4 |         47 |
+| d:\work\programming228\web\game-tensor\src\store\changePassword\changePasswordThunk.ts    | TypeScript     |         24 |          0 |          2 |         26 |
+| d:\work\programming228\web\game-tensor\src\store\createAd\createAdSelector.ts             | TypeScript     |         11 |          0 |          4 |         15 |
+| d:\work\programming228\web\game-tensor\src\store\createAd\createAdSlice.ts                | TypeScript     |         29 |          0 |          4 |         33 |
+| d:\work\programming228\web\game-tensor\src\store\createAd\createAdThunk.ts                | TypeScript     |         18 |          0 |          2 |         20 |
+| d:\work\programming228\web\game-tensor\src\store\createChat\createChatSlice.ts            | TypeScript     |         32 |          0 |          4 |         36 |
+| d:\work\programming228\web\game-tensor\src\store\createChat\createChatThunk.ts            | TypeScript     |         13 |          0 |          2 |         15 |
+| d:\work\programming228\web\game-tensor\src\store\createMessage\createMessageSlice.ts      | TypeScript     |         28 |          0 |          4 |         32 |
+| d:\work\programming228\web\game-tensor\src\store\createMessage\createMessageThunk.ts      | TypeScript     |         17 |          0 |          2 |         19 |
+| d:\work\programming228\web\game-tensor\src\store\currentUser\currentUserThunk.ts          | TypeScript     |         -1 |          0 |          0 |         -1 |
+| d:\work\programming228\web\game-tensor\src\store\deleteBookmark\deleteBookmarkSlice.ts    | TypeScript     |         28 |          0 |          4 |         32 |
+| d:\work\programming228\web\game-tensor\src\store\deleteBookmark\deleteBookmarkThunk.ts    | TypeScript     |         14 |          0 |          2 |         16 |
+| d:\work\programming228\web\game-tensor\src\store\editAd\editAdSelector.ts                 | TypeScript     |         11 |          0 |          4 |         15 |
+| d:\work\programming228\web\game-tensor\src\store\editAd\editAdSlice.ts                    | TypeScript     |         29 |          0 |          4 |         33 |
+| d:\work\programming228\web\game-tensor\src\store\editAd\editAdThunk.ts                    | TypeScript     |         18 |          0 |          2 |         20 |
+| d:\work\programming228\web\game-tensor\src\store\getBookmark\getBookmarkSelector.ts       | TypeScript     |         15 |          0 |          5 |         20 |
+| d:\work\programming228\web\game-tensor\src\store\getBookmark\getBookmarkSlice.ts          | TypeScript     |         61 |          0 |          5 |         66 |
+| d:\work\programming228\web\game-tensor\src\store\getBookmark\getBookmarkThunk.ts          | TypeScript     |         11 |          0 |          2 |         13 |
+| d:\work\programming228\web\game-tensor\src\store\getChats\getChatsSelector.ts             | TypeScript     |          6 |          0 |          5 |         11 |
+| d:\work\programming228\web\game-tensor\src\store\getChats\getChatsSlice.ts                | TypeScript     |         59 |          1 |          6 |         66 |
+| d:\work\programming228\web\game-tensor\src\store\getChats\getChatsThunk.ts                | TypeScript     |         11 |          0 |          2 |         13 |
+| d:\work\programming228\web\game-tensor\src\store\getMessages\getMessagesSelector.ts       | TypeScript     |         15 |          0 |          5 |         20 |
+| d:\work\programming228\web\game-tensor\src\store\getMessages\getMessagesSlice.ts          | TypeScript     |         69 |          1 |          6 |         76 |
+| d:\work\programming228\web\game-tensor\src\store\getMessages\getMessagesThunk.ts          | TypeScript     |         14 |          0 |          2 |         16 |
+| d:\work\programming228\web\game-tensor\src\store\getNotifCount\getNotifCountSelector.ts   | TypeScript     |         15 |          0 |          5 |         20 |
+| d:\work\programming228\web\game-tensor\src\store\getNotifCount\getNotifCountSlice.ts      | TypeScript     |         41 |          1 |          6 |         48 |
+| d:\work\programming228\web\game-tensor\src\store\getNotifCount\getNotifCountThunk.ts      | TypeScript     |         14 |          0 |          2 |         16 |
+| d:\work\programming228\web\game-tensor\src\store\getNotif\getNotifSelector.ts             | TypeScript     |          6 |          0 |          5 |         11 |
+| d:\work\programming228\web\game-tensor\src\store\getNotif\getNotifSlice.ts                | TypeScript     |         62 |          1 |          6 |         69 |
+| d:\work\programming228\web\game-tensor\src\store\getNotif\getNotifThunk.ts                | TypeScript     |         11 |          0 |          2 |         13 |
+| d:\work\programming228\web\game-tensor\src\store\getUserName\getUserNameSelector.ts       | TypeScript     |         15 |          0 |          5 |         20 |
+| d:\work\programming228\web\game-tensor\src\store\getUserName\getUserNameSlice.ts          | TypeScript     |         46 |          1 |          6 |         53 |
+| d:\work\programming228\web\game-tensor\src\store\getUserName\getUserNameThunk.ts          | TypeScript     |         14 |          0 |          2 |         16 |
+| d:\work\programming228\web\game-tensor\src\store\getUsers\getUsersSelector.ts             | TypeScript     |          6 |          0 |          5 |         11 |
+| d:\work\programming228\web\game-tensor\src\store\getUsers\getUsersSlice.ts                | TypeScript     |         41 |          0 |          5 |         46 |
+| d:\work\programming228\web\game-tensor\src\store\getUsers\getUsersThunk.ts                | TypeScript     |         14 |          0 |          2 |         16 |
+| d:\work\programming228\web\game-tensor\src\store\imageId\imageThunk.ts                    | TypeScript     |         -1 |          0 |          0 |         -1 |
+| d:\work\programming228\web\game-tensor\src\store\login\loginSelector.ts                   | TypeScript     |         -9 |          0 |          0 |         -9 |
+| d:\work\programming228\web\game-tensor\src\store\login\loginSlice.ts                      | TypeScript     |          8 |          0 |         -1 |          7 |
+| d:\work\programming228\web\game-tensor\src\store\login\loginThunk.ts                      | TypeScript     |          6 |          0 |          0 |          6 |
+| d:\work\programming228\web\game-tensor\src\store\onSubscribe\onSubscribeSlice.ts          | TypeScript     |         29 |          0 |          4 |         33 |
+| d:\work\programming228\web\game-tensor\src\store\onSubscribe\onSubscribeThunk.ts          | TypeScript     |         14 |          0 |          2 |         16 |
+| d:\work\programming228\web\game-tensor\src\store\patchStatusAd\patchStatusSelectorAd.ts   | TypeScript     |         17 |          0 |          2 |         19 |
+| d:\work\programming228\web\game-tensor\src\store\patchStatusAd\patchStatusSlice.ts        | TypeScript     |         28 |          0 |          4 |         32 |
+| d:\work\programming228\web\game-tensor\src\store\patchStatusUser\patchStatusUserSlice.ts  | TypeScript     |         28 |          0 |          4 |         32 |
+| d:\work\programming228\web\game-tensor\src\store\patchStatusUser\patchStatusUserThunk.ts  | TypeScript     |         17 |          0 |          2 |         19 |
+| d:\work\programming228\web\game-tensor\src\store\pathStatusNotif\pathStatusNotifSlice.ts  | TypeScript     |         28 |          0 |          4 |         32 |
+| d:\work\programming228\web\game-tensor\src\store\pathStatusNotif\pathStatusNotifThunk.ts  | TypeScript     |         17 |          0 |          2 |         19 |
+| d:\work\programming228\web\game-tensor\src\store\postBookmark\postBookmarkSlice.ts        | TypeScript     |         28 |          0 |          4 |         32 |
+| d:\work\programming228\web\game-tensor\src\store\postBookmark\postBookmarkThunk.ts        | TypeScript     |         16 |          0 |          2 |         18 |
+| d:\work\programming228\web\game-tensor\src\store\postTag\postTagSelector.ts               | TypeScript     |         15 |          0 |          5 |         20 |
+| d:\work\programming228\web\game-tensor\src\store\postTag\postTagSlice.ts                  | TypeScript     |         43 |          0 |          4 |         47 |
+| d:\work\programming228\web\game-tensor\src\store\postTag\postTagThunk.ts                  | TypeScript     |         20 |          0 |          2 |         22 |
+| d:\work\programming228\web\game-tensor\src\store\registration\registrationSlice.ts        | TypeScript     |          7 |          0 |          0 |          7 |
+| d:\work\programming228\web\game-tensor\src\store\registration\registrationThunk.ts        | TypeScript     |          4 |          0 |          0 |          4 |
+| d:\work\programming228\web\game-tensor\src\store\search\searchSlice.ts                    | TypeScript     |         29 |          0 |          0 |         29 |
+| d:\work\programming228\web\game-tensor\src\store\search\searchThunk.ts                    | TypeScript     |         -8 |         -1 |          0 |         -9 |
+| d:\work\programming228\web\game-tensor\src\store\store.ts                                 | TypeScript     |         40 |          0 |          0 |         40 |
+| d:\work\programming228\web\game-tensor\src\store\subscribe\subscribeSlice.ts              | TypeScript     |         29 |          0 |          4 |         33 |
+| d:\work\programming228\web\game-tensor\src\store\subscribe\subscribeThunk.ts              | TypeScript     |         14 |          0 |          2 |         16 |
+| d:\work\programming228\web\game-tensor\src\styles\AdminApprove.module.scss                | SCSS           |         25 |          0 |          2 |         27 |
+| d:\work\programming228\web\game-tensor\src\styles\AdminBlock.module.scss                  | SCSS           |         34 |          0 |          0 |         34 |
+| d:\work\programming228\web\game-tensor\src\styles\Advertisements.module.scss              | SCSS           |         25 |          0 |          2 |         27 |
+| d:\work\programming228\web\game-tensor\src\styles\Alerts.module.scss                      | SCSS           |         35 |          0 |          7 |         42 |
+| d:\work\programming228\web\game-tensor\src\styles\Bookmarks.module.scss                   | SCSS           |         18 |          0 |          1 |         19 |
+| d:\work\programming228\web\game-tensor\src\styles\CardAds.module.scss                     | SCSS           |         20 |          0 |          0 |         20 |
+| d:\work\programming228\web\game-tensor\src\styles\Chat.module.scss                        | SCSS           |        189 |          1 |         16 |        206 |
+| d:\work\programming228\web\game-tensor\src\styles\Dialog.module.scss                      | SCSS           |         43 |          0 |          8 |         51 |
+| d:\work\programming228\web\game-tensor\src\styles\GameId.module.scss                      | SCSS           |         54 |          0 |          1 |         55 |
+| d:\work\programming228\web\game-tensor\src\styles\Header.module.scss                      | SCSS           |         26 |          0 |          1 |         27 |
+| d:\work\programming228\web\game-tensor\src\styles\Home.module.scss                        | SCSS           |          1 |          0 |          0 |          1 |
+| d:\work\programming228\web\game-tensor\src\styles\UserId.module.scss                      | SCSS           |         52 |          0 |          0 |         52 |
+| d:\work\programming228\web\game-tensor\src\styles\globals.css                             | CSS            |          4 |          0 |          1 |          5 |
+| Total                                                                                     |                |      4,535 |        -11 |        364 |      4,888 |
++-------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

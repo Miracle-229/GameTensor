@@ -1,25 +1,28 @@
 import CardAds from '@/components/CardAds';
-import CardTag from '@/components/CardTag';
-import { IAds, ITags } from '@/helper/Types/game';
+import { IAdsData } from '@/helper/Types/game';
 import Layout from '@/layouts/Layout';
 import { getAdsAction } from '@/store/ads/adsThunk';
-import { wrapper } from '@/store/store';
-import { getTagsAction } from '@/store/tags/tagsThunk';
+import { getCurrentUserAction } from '@/store/currentUser/currentUserThunk';
+import { getBookmarkAction } from '@/store/getBookmark/getBookmarkThunk';
+import { AppDispatch, wrapper } from '@/store/store';
 import style from '@/styles/Home.module.scss';
+import { getCookie } from 'cookies-next';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-export default function Home({
-  tagsData,
-  adsData,
-}: {
-  tagsData: ITags[];
-  adsData: IAds[];
-}) {
-  // для проверки на netrwork
-  // const dispatch = useDispatch<AppDispatch>();
+export default function Home({ adsData }: { adsData: IAdsData }) {
+  const user = getCookie('user');
+  const [isBookmarkLoaded, setIsBookmarkLoaded] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    if (user && !isBookmarkLoaded) {
+      dispatch(getBookmarkAction());
+      setIsBookmarkLoaded(true);
+    }
+  }, [dispatch, user, isBookmarkLoaded]);
   // useEffect(() => {
-  //   dispatch(getAdsAction())
+  //   dispatch(getAdsAction({ value: [], key: 'tags.tagId' }))
   //     .then((response) => {
   //       console.log(response.payload);
   //     })
@@ -27,14 +30,17 @@ export default function Home({
   //       console.error('Error fetching types:', error);
   //       console.log([]);
   //     });
-  // }, []);
-  // для проверки на netrwork
+  // }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getCurrentUserAction());
+  }, [dispatch]);
   return (
     <Layout title="GameTensor">
       <div className={style.home}>
         <div className={style.slogan}>
           <p>
-            Keys to the world of entertainment in every matrix with Gametensor
+            Keys to the world of entertainment in every matrix with GameTensor
           </p>
           <Image
             className={style.slogan_img}
@@ -44,14 +50,6 @@ export default function Home({
             alt="GameTensor"
           />
         </div>
-        <div style={{ marginTop: '100px' }}>
-          <h3 className={style.h3}>Popular tags</h3>
-          <div className={style.tags_main}>
-            {tagsData.slice(0, 5).map((data) => (
-              <CardTag key={data.id} dataTags={data} />
-            ))}
-          </div>
-        </div>
         <div
           style={{
             marginTop: '100px',
@@ -60,12 +58,10 @@ export default function Home({
             alignItems: 'center',
           }}
         >
-          <h3 className={style.h3}>Trending advertisements</h3>
+          <h3 className={style.h3}>Recently advertisements</h3>
           <div className={style.ads_main}>
-            {adsData.slice(0, 6).map((data) => (
-              <Link href={`/${data.id}`} key={data.id}>
-                <CardAds adsData={data} />
-              </Link>
+            {adsData.content.slice(0, 6).map((data) => (
+              <CardAds key={data.adId} adsData={data} />
             ))}
           </div>
         </div>
@@ -77,17 +73,12 @@ export default function Home({
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async () => {
     try {
-      const [tagsRes, adsRes] = await Promise.all([
-        store.dispatch(getTagsAction()),
-        store.dispatch(getAdsAction()),
+      const [adsRes] = await Promise.all([
+        store.dispatch(getAdsAction({ status: 'APPROVED' })),
       ]);
-      const [tagsData, adsData] = await Promise.all([
-        tagsRes.payload,
-        adsRes.payload,
-      ]);
+      const [adsData] = await Promise.all([adsRes.payload]);
       return {
         props: {
-          tagsData,
           adsData,
         },
       };
@@ -95,7 +86,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
       console.error('Error fetching data:', error);
       return {
         props: {
-          tagsData: [],
           adsData: [],
         },
       };

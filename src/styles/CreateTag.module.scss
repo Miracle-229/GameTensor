@@ -1,0 +1,41 @@
+.main {
+  padding: 80px;
+  h1 {
+    padding-bottom: 10px;
+    max-width: 165px;
+    border-bottom: 2px solid white;
+  }
+  input {
+    font-size: 18px;
+    color: black;
+    margin-top: 40px;
+    border-radius: 15px;
+    width: 300px;
+    padding: 10px 20px;
+    background-color: #c2c2c2;
+  }
+  button {
+    border: none;
+    outline: none;
+    border-radius: 15px;
+    padding: 5px 40px;
+    font-size: 25px;
+    margin-top: 40px;
+    display: block;
+  }
+}
+@media (max-width: 426px) {
+  .main {
+    padding: 80px 55px;
+  }
+}
+@media (max-width: 376px) {
+  .main {
+    padding: 80px 40px;
+  }
+}
+@media (max-width: 361px) {
+  .main {
+    padding: 80px 35px;
+  }
+}

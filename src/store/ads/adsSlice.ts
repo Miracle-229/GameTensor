@@ -1,23 +1,50 @@
 /* eslint-disable no-console */
 
-'use client';
-
 import { createAction, createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
-import { IAds } from '@/helper/Types/game';
+import { IGameData } from '@/helper/Types/game';
 import type { AppState } from '../store';
 import { getAdsAction } from './adsThunk';
 
 const hydrate = createAction<AppState>(HYDRATE);
 
 type AdsState = {
-  data: IAds[];
+  data: {
+    content: IGameData[];
+    pageable: {
+      pageNumber: number;
+    };
+    totalPages: number;
+  };
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 };
 
 const initialState: AdsState = {
-  data: [],
+  data: {
+    content: [
+      {
+        adId: 0,
+        user: {
+          login: '',
+          userId: 0,
+        },
+        title: '',
+        background_image: '',
+        price: '',
+        date: '',
+        tags: [],
+        description: '',
+        creationDate: '',
+        medias: [],
+        status: '',
+      },
+    ],
+    pageable: {
+      pageNumber: 0,
+    },
+    totalPages: 0,
+  },
   status: 'idle',
   error: null,
 };
