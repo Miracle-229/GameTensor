@@ -83,6 +83,12 @@
   font-style: italic;
   padding-right: 10px;
 }
+.tags_box {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 600px;
+  row-gap: 10px;
+}
 .overview_tags {
   background-color: #7f7f7f;
   color: white;

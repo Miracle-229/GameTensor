@@ -45,6 +45,7 @@ function Chat({ initialDialogId }: ChatProps) {
   const [isMaxHeightReached, setIsMaxHeightReached] = useState(false);
   const [isAddedNewMessage, setIsAddedNewMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  console.log(data);
 
   const loadMoreMessages = async () => {
     if (isLoading || isMaxHeightReached) return;
@@ -233,6 +234,25 @@ function Chat({ initialDialogId }: ChatProps) {
     fetchNotifCount();
   }, [dispatch]);
 
+  const formatterTime = new Intl.DateTimeFormat('ru-RU', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+  });
+
+  const formatterDate = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+  });
+  let lastDate = '';
+
+  const currentChat = data.find((chatId) => chatId.chatId === currentDialog);
+
+  const isUserBlocked =
+    currentChat &&
+    currentChat.users.some((userId) => userId.status === 'BLOCKED');
+
   return (
     <RegistrationLayout title="Chat">
       <div className={styles.chatContainer}>
@@ -273,36 +293,61 @@ function Chat({ initialDialogId }: ChatProps) {
                 .slice()
                 .reverse()
                 .filter((message) => message.chatId === currentDialog)
-                .map((message) => (
-                  <div
-                    key={message.messageId}
-                    className={styles.messageOutput_box}
-                  >
-                    {message.user.userId === user.userId ? (
-                      <div className={styles.messageOutput_user}>
-                        {message.text}
+                .map((message) => {
+                  const messageDate = new Date(message.date);
+                  const formattedDate = formatterDate.format(messageDate);
+                  const showDateHeader = lastDate !== formattedDate;
+                  lastDate = formattedDate;
+                  return (
+                    <>
+                      {showDateHeader && (
+                        <div className={styles.dateHeader}>
+                          <p>{formattedDate}</p>
+                        </div>
+                      )}
+                      <div
+                        key={message.messageId}
+                        className={styles.messageOutput_box}
+                      >
+                        {message.user.userId === user.userId ? (
+                          <div className={styles.messageOutput_user}>
+                            {message.text}
+                            <p style={{ fontSize: '10px' }}>
+                              {formatterTime.format(new Date(message.date))}
+                            </p>
+                          </div>
+                        ) : (
+                          <div className={styles.messageOutput_guest}>
+                            {message.text}
+                            <p style={{ fontSize: '10px' }}>
+                              {formatterTime.format(new Date(message.date))}
+                            </p>
+                          </div>
+                        )}
                       </div>
-                    ) : (
-                      <div className={styles.messageOutput_guest}>
-                        {message.text}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                    </>
+                  );
+                })}
               <div ref={messagesEndRef} />
             </div>
-            <div className={styles.messageBox}>
-              <input
-                value={newMessageText}
-                onChange={handleInputChange}
-                type="text"
-                placeholder="Write message"
-                onKeyUp={handleKeyUp}
-              />
-              <button type="button" onClick={handleSendMessage}>
-                <FaTelegramPlane size={18} />
-              </button>
-            </div>
+            {isUserBlocked ? (
+              <div className={styles.blockedMessageBox}>
+                <p>This user is blocked</p>
+              </div>
+            ) : (
+              <div className={styles.messageBox}>
+                <input
+                  value={newMessageText}
+                  onChange={handleInputChange}
+                  type="text"
+                  placeholder="Write message"
+                  onKeyUp={handleKeyUp}
+                />
+                <button type="button" onClick={handleSendMessage}>
+                  <FaTelegramPlane size={18} />
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

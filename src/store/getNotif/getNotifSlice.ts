@@ -27,7 +27,7 @@ const initialState: notifState = {
         creationDate: '',
         linkId: '',
         message: '',
-        notificationId: '',
+        notificationId: 0,
         read: false,
       },
     ],

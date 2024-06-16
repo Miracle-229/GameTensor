@@ -7,7 +7,7 @@ export const logoutAction = createAsyncThunk('logout', async () => {
     await api.post('auth/logout');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    deleteCookie('user');
+    deleteCookie('role');
   } catch (error) {
     console.error('Error fetching registration:', error);
     throw error;

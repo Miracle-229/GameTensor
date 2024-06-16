@@ -1,15 +1,22 @@
-import { ITags } from '@/helper/Types/game';
 import { createSlice } from '@reduxjs/toolkit';
 import { postTagAction } from './postTagThunk';
 
 type postTagState = {
-  data: ITags[];
+  data: {
+    httpStatus: string;
+    message: string;
+    errCode: string;
+  };
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 };
 
 const initialState: postTagState = {
-  data: [],
+  data: {
+    httpStatus: '',
+    message: '',
+    errCode: '',
+  },
   status: 'idle',
   error: null,
 };
@@ -30,7 +37,10 @@ export const postTagSlice = createSlice({
       })
       .addCase(postTagAction.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message as string;
+        state.error =
+          (action.payload as { message: string }).message ||
+          action.error.message ||
+          null;
       });
   },
 });

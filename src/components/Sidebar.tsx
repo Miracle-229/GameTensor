@@ -6,10 +6,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MdBlock, MdDomainVerification } from 'react-icons/md';
 import { FaTag, FaDoorClosed } from 'react-icons/fa';
-import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
+import { logoutAction } from '@/store/logout/logoutThunk';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store/store';
+import { deleteCookie } from 'cookies-next';
 
 function Sidebar() {
+  const dispatch = useDispatch<AppDispatch>();
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
@@ -18,8 +22,8 @@ function Sidebar() {
   };
 
   const closeModal = () => {
+    dispatch(logoutAction());
     setShowModal(false);
-    deleteCookie('user');
     deleteCookie('role');
     router.push('/');
   };

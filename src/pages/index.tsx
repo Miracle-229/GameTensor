@@ -58,7 +58,7 @@ export default function Home({ adsData }: { adsData: IAdsData }) {
             alignItems: 'center',
           }}
         >
-          <h3 className={style.h3}>Trending advertisements</h3>
+          <h3 className={style.h3}>Recently advertisements</h3>
           <div className={style.ads_main}>
             {adsData.content.slice(0, 6).map((data) => (
               <CardAds key={data.adId} adsData={data} />
@@ -75,7 +75,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
     try {
       const [adsRes] = await Promise.all([
         store.dispatch(getAdsAction({ status: 'APPROVED' })),
-        // store.dispatch(getBookmarkAction()),
       ]);
       const [adsData] = await Promise.all([adsRes.payload]);
       return {

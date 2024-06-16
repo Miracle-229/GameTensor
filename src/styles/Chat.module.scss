@@ -60,7 +60,12 @@
   justify-content: flex-end;
   overflow: hidden;
 }
-
+.blockedMessageBox {
+  background-color: #3b3b3b;
+  text-align: center;
+  padding: 20px 0px;
+  font-size: 20px;
+}
 .messageBox {
   display: grid;
   grid-template-columns: 97% 3%;
@@ -104,9 +109,22 @@
   padding: 10px 10px 0px 10px;
 }
 
+.dateHeader {
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  top: 15px;
+  p {
+    background-color: #c2c2c2;
+    padding: 5px 10px;
+    border-radius: 15px;
+    color: #3b3b3b;
+  }
+}
+
 .messageOutput_guest {
   display: inline-block;
-  max-width: 50%;
+  max-width: 40%;
   width: fit-content;
   padding: 10px;
   min-height: 33px;
@@ -126,7 +144,7 @@
   display: inline-block;
   margin-top: 20px;
   align-self: self-end;
-  max-width: 50%;
+  max-width: 40%;
   min-height: 33px;
   padding: 10px;
   font-size: 17px;
@@ -139,6 +157,9 @@
   overflow-wrap: break-word;
   word-wrap: break-word;
   white-space: normal;
+  p {
+    text-align: right;
+  }
 }
 
 @media (max-width: 769px) {

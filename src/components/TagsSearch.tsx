@@ -6,18 +6,27 @@ import { ITags } from '@/helper/Types/game';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store/store';
 import { getAdsAction } from '@/store/ads/adsThunk';
+import { useRouter } from 'next/router';
 
 function TagsSearch({ selected, tags }: { selected?: ITags[]; tags: ITags[] }) {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [tagsLoad, setTagsLoad] = useState(false);
 
+  console.log(router.asPath);
+
   useEffect(() => {
-    if (selectedItems.length > 0) {
-      dispatch(getAdsAction({ value: selectedItems, key: 'tags.tagId' }));
-    } else {
-      dispatch(getAdsAction({ status: 'APPROVED' }));
+    if (
+      router.asPath !== '/ad/create' &&
+      !/^\/ad\/edit\/[^/]+$/.test(router.asPath)
+    ) {
+      if (selectedItems.length > 0) {
+        dispatch(getAdsAction({ value: selectedItems, key: 'tags.tagId' }));
+      } else {
+        dispatch(getAdsAction({ status: 'APPROVED' }));
+      }
     }
     localStorage.setItem('selectedTags', selectedItems.join(','));
     if (selected && !tagsLoad) {
@@ -25,7 +34,7 @@ function TagsSearch({ selected, tags }: { selected?: ITags[]; tags: ITags[] }) {
       setSelectedItems(selectedIds);
       setTagsLoad(true);
     }
-  }, [selectedItems, dispatch, tagsLoad, selected]);
+  }, [selectedItems, dispatch, tagsLoad, selected, router.asPath]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -43,6 +52,7 @@ function TagsSearch({ selected, tags }: { selected?: ITags[]; tags: ITags[] }) {
   const filteredData = tags.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const isRequired = selectedItems.length === 0;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -60,6 +70,7 @@ function TagsSearch({ selected, tags }: { selected?: ITags[]; tags: ITags[] }) {
         {filteredData.map((item) => (
           <div key={item.tagId}>
             <input
+              required={isRequired}
               type="checkbox"
               className={style.checkbox}
               id={`${item.tagId}`}

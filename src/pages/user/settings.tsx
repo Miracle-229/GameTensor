@@ -34,11 +34,13 @@ function Settings() {
       setOldPass(trimmedPassword);
     }
   };
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       const response = await dispatch(
         changePasswordAction({ oldPass, newPass })
       );
+      console.log(response);
       if (response.type === 'changePassword/rejected') {
         showAlertError();
         hideAlertSuccess();
@@ -56,7 +58,7 @@ function Settings() {
   };
   return (
     <Layout title="User settings">
-      <div className={style.main}>
+      <form onSubmit={handleSaveChanges} className={style.main}>
         <h1>Profile Settings</h1>
         <h3>Password</h3>
         <input
@@ -64,17 +66,17 @@ function Settings() {
           onChange={(e) => handlePasswordChange(e, false)}
           placeholder="Repeat old password..."
           type="password"
+          required
         />
         <input
           onChange={(e) => handlePasswordChange(e, true)}
           value={newPass}
           placeholder="Input new password..."
           type="password"
+          required
         />
-        <button onClick={handleSaveChanges} type="button">
-          Save changes
-        </button>
-      </div>
+        <button type="submit">Save changes</button>
+      </form>
       <Alert
         type="error"
         message={errorText}

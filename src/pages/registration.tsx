@@ -39,6 +39,11 @@ function Registration() {
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const trimmedPassword = e.target.value.trim().replace(/\s+/g, ' ');
     setPassword(trimmedPassword);
+    if (repeatPassword !== trimmedPassword) {
+      setPasswordError('Passwords do not match');
+    } else {
+      setPasswordError('');
+    }
   };
 
   const handleRepeatPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MdEdit, MdDelete } from 'react-icons/md';
 import { IoMdChatbubbles } from 'react-icons/io';
 import { currentUserData } from '@/store/currentUser/currentUserSelector';
-import { AppDispatch } from '@/store/store';
+import { AppDispatch, wrapper } from '@/store/store';
 import { getAdsAction } from '@/store/ads/adsThunk';
 import { adsData } from '@/store/ads/adsSelector';
 import { useRouter } from 'next/router';
@@ -25,6 +25,7 @@ import Alert from '@/components/Alert';
 import { createChatAction } from '@/store/createChat/createChatThunk';
 import { onSubscribeAction } from '@/store/onSubscribe/onSubscribeThunk';
 import { userNameData } from '@/store/getUserName/getUserNameSelector';
+import { GetServerSidePropsContext } from 'next';
 
 export default function IdUserPage() {
   const { visibleError, showAlertError, hideAlertError } = useAlert();
@@ -40,6 +41,10 @@ export default function IdUserPage() {
   };
   const currentUser = useSelector(currentUserData);
   const flag = login === currentUser.login;
+  const role =
+    Array.isArray(currentUser.roles) &&
+    currentUser.roles.length > 0 &&
+    currentUser.roles[0];
   const ads = useSelector(adsData);
   const [searchTerm, setSearchTerm] = useState('');
   const [isFollowing, setIsFollowing] = useState(false);
@@ -156,28 +161,32 @@ export default function IdUserPage() {
         <div className={style.profile}>
           <div className={style.profile_inf}>
             <p>{user?.login}</p>
-            <div className={style.profile_inf_follow}>
-              <button onClick={openModalSubscribers} type="button">
-                Followers: {user.subscribers?.length}
-              </button>
-              <button onClick={openModalFollowers} type="button">
-                Following: {user.followers?.length}
-              </button>
-            </div>
-            {login !== currentUser.login && (
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <button onClick={handleSubscribe} type="button">
-                  {isFollowing ? 'Unsubscribe' : 'Subscribe'}
+            {user.status !== 'BLOCKED' && (
+              <div className={style.profile_inf_follow}>
+                <button onClick={openModalSubscribers} type="button">
+                  Followers: {user.subscribers?.length}
                 </button>
-                <button
-                  type="button"
-                  className={style.chat}
-                  onClick={handleChatClick}
-                >
-                  <IoMdChatbubbles size={25} /> Chat
+                <button onClick={openModalFollowers} type="button">
+                  Following: {user.followers?.length}
                 </button>
               </div>
             )}
+            {role === 'ROLE_USER' &&
+              login !== currentUser.login &&
+              user.status !== 'BLOCKED' && (
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <button onClick={handleSubscribe} type="button">
+                    {isFollowing ? 'Unsubscribe' : 'Subscribe'}
+                  </button>
+                  <button
+                    type="button"
+                    className={style.chat}
+                    onClick={handleChatClick}
+                  >
+                    <IoMdChatbubbles size={25} /> Chat
+                  </button>
+                </div>
+              )}
           </div>
         </div>
         {user.status === 'ACTIVE' ? (
@@ -285,17 +294,6 @@ export default function IdUserPage() {
                     <div className={style.ads}>
                       {filteredAds.map((data) => (
                         <div key={data.adId}>
-                          <div className={style.adiId_buttons}>
-                            <Link href={`/ad/edit/${data.adId}`}>
-                              <MdEdit size={25} />
-                            </Link>
-                            <button
-                              onClick={() => deleteAd(data.adId)}
-                              type="button"
-                            >
-                              <MdDelete size={26} />
-                            </button>
-                          </div>
                           <CardAds adsData={data} />
                         </div>
                       ))}
@@ -328,3 +326,23 @@ export default function IdUserPage() {
     </Layout>
   );
 }
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) => async (context: GetServerSidePropsContext) => {
+    const login = context.params?.login as string;
+    const game = await store.dispatch(getUserNameAction(login));
+
+    if (!game.payload || game.payload === undefined) {
+      return {
+        notFound: true,
+      };
+    }
+
+    const props = {
+      game: game.payload ? game.payload : null,
+    };
+
+    return {
+      props,
+    };
+  }
+);

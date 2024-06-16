@@ -19,7 +19,6 @@ import { IoMdChatbubbles } from 'react-icons/io';
 import { MdContacts, MdDashboard } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { currentUserData } from '@/store/currentUser/currentUserSelector';
-import { deleteCookie, getCookie } from 'cookies-next';
 import { AppDispatch } from '@/store/store';
 import { logoutAction } from '@/store/logout/logoutThunk';
 import { useRouter } from 'next/router';
@@ -29,10 +28,11 @@ import { notifData } from '@/store/getNotif/getNotifSelector';
 import { formatDateLink } from '@/helper/Constants/timeFunctions';
 import { patchStatusNotifAction } from '@/store/pathStatusNotif/pathStatusNotifThunk';
 import { getCurrentUserAction } from '@/store/currentUser/currentUserThunk';
+import { INotif } from '@/helper/Types/game';
+import { getNotifCountAction } from '@/store/getNotifCount/getNotifCountThunk';
 import Search from './Search';
 
 function Header() {
-  const role = getCookie('role');
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const userData = useSelector(currentUserData);
@@ -40,8 +40,11 @@ function Header() {
   const headerRef = useRef<HTMLDivElement>(null);
   const loginFromQuery = router.query.login as string;
   const advertisementsFromQuery = router.pathname;
-  const { login } = userData;
-  const addAdvertisementLink = role ? '/ad/create' : '/registration';
+  const { login, roles } = userData;
+  const addAdvertisementLink =
+    Array.isArray(roles) && roles.length > 0 && roles[0] === 'ROLE_USER'
+      ? '/ad/create'
+      : '/registration';
   const [showUser, setShowUser] = useState<boolean>(false);
   const [showNot, setShowNot] = useState<boolean>(false);
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -50,9 +53,18 @@ function Header() {
   const isTablet = useMediaQuery({ minWidth: 426, maxWidth: 768 });
   const isPhone = useMediaQuery({ minWidth: 345, maxWidth: 431 });
   const dataNotif = useSelector(notifData);
-  const getNotif = () => {
-    dispatch(getNotifAction());
+  const [currentPage, setCurrentPage] = useState(0);
+  const { totalPages } = dataNotif;
+  const [notifications, setNotifications] = useState<{
+    content: INotif[];
+    pageable: { pageNumber: number };
+    totalPages: number;
+  }>(dataNotif);
+
+  const getNotif = async () => {
+    await dispatch(getNotifAction());
   };
+
   useEffect(() => {
     if (dataNotif.content && dataNotif.content.length > 0) {
       const notificationsIds = dataNotif.content.map(
@@ -61,6 +73,39 @@ function Header() {
       dispatch(patchStatusNotifAction(notificationsIds));
     }
   }, [dataNotif, dispatch]);
+
+  useEffect(() => {
+    setNotifications((prevState) => ({
+      ...prevState,
+      content: [
+        ...prevState.content.filter((notif) => notif.message !== ''),
+        ...dataNotif.content,
+      ],
+    }));
+  }, [dataNotif]);
+
+  useEffect(() => {
+    setNotifications({
+      content: [],
+      pageable: { pageNumber: 0 },
+      totalPages: 0,
+    });
+  }, [showNot]);
+
+  useEffect(() => {
+    const fetchNotifCount = async () => {
+      await dispatch(getNotifCountAction());
+    };
+    fetchNotifCount();
+  }, [dispatch, notifications]);
+
+  const scroll = async () => {
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    if (currentPage < totalPages) {
+      await dispatch(getNotifAction(nextPage));
+    }
+  };
   const getSize = (...args: boolean[]) => {
     const [laptop, tablet, phone] = args;
     if (laptop) {
@@ -88,7 +133,9 @@ function Header() {
     setShowNot(!showNot);
     setMenu(false);
     setShowUser(false);
-    getNotif();
+    if (!showNot) {
+      getNotif();
+    }
   };
   useEffect(() => {
     setShowMenu(isPhone);
@@ -98,8 +145,6 @@ function Header() {
     setMenu(false);
     setShowUser(false);
     setShowNot(false);
-    deleteCookie('user');
-    deleteCookie('role');
     router.push('/');
   };
   const handleOutsideClick = (event: MouseEvent | TouchEvent) => {
@@ -110,6 +155,7 @@ function Header() {
       setMenu(false);
       setShowUser(false);
       setShowNot(false);
+      dispatch(getNotifCountAction());
     }
   };
 
@@ -128,8 +174,9 @@ function Header() {
       await dispatch(getCurrentUserAction());
     };
     fetchCurrentUser();
-  }, [dispatch]);
+  }, [dispatch, dataNotif]);
   const { width, height } = getSize(isLaptop, isTablet, isPhone);
+
   return (
     <>
       <header ref={headerRef} className={style.header}>
@@ -147,16 +194,20 @@ function Header() {
               <Search />
             </div>
             <div className={style.block_header_user}>
-              <button
-                onClick={openNot}
-                className={`${
-                  userData.login ? style.burger_button : style.none
-                }`}
-                type="button"
-              >
-                <FaBell size={22} />
-                {notifCount > 0 && <span>{notifCount}</span>}
-              </button>
+              {Array.isArray(roles) &&
+                roles.length > 0 &&
+                roles[0] === 'ROLE_USER' && (
+                  <button
+                    onClick={openNot}
+                    className={`${
+                      userData.login ? style.burger_button : style.none
+                    }`}
+                    type="button"
+                  >
+                    <FaBell className={style.user_ico} size={22} />
+                    {notifCount > 0 && <span>{notifCount}</span>}
+                  </button>
+                )}
               <button
                 onClick={openUser}
                 className={style.burger_button_user}
@@ -203,18 +254,20 @@ function Header() {
               <Link className={style.add_button} href={addAdvertisementLink}>
                 Add advertisements
               </Link>
-
-              <button
-                onClick={openNot}
-                className={`${
-                  userData.login ? style.burger_button : style.none
-                }`}
-                type="button"
-              >
-                <FaBell className={style.user_ico} size={22} />
-                {notifCount > 0 && <span>{notifCount}</span>}
-              </button>
-
+              {Array.isArray(roles) &&
+                roles.length > 0 &&
+                roles[0] === 'ROLE_USER' && (
+                  <button
+                    onClick={openNot}
+                    className={`${
+                      userData.login ? style.burger_button : style.none
+                    }`}
+                    type="button"
+                  >
+                    <FaBell className={style.user_ico} size={22} />
+                    {notifCount > 0 && <span>{notifCount}</span>}
+                  </button>
+                )}
               <button
                 onClick={openUser}
                 className={style.burger_button_user}
@@ -238,16 +291,20 @@ function Header() {
           ) : (
             <div className={style.link}>Advertisements</div>
           )}
-          {role && (
-            <Link className={style.add_button} href="/ad/create">
-              Add advertisements
-            </Link>
-          )}
+          {Array.isArray(roles) &&
+            roles.length > 0 &&
+            roles[0] === 'ROLE_USER' && (
+              <Link className={style.add_button} href="/ad/create">
+                Add advertisements
+              </Link>
+            )}
         </div>
       )}
       {showUser && (
         <div className={style.menu_user}>
-          {role ? (
+          {Array.isArray(roles) &&
+          roles.length > 0 &&
+          roles[0] === 'ROLE_USER' ? (
             <>
               <Link className={style.link} href="/user/settings">
                 <MdContacts size={20} /> Settings account
@@ -289,9 +346,9 @@ function Header() {
       )}
       {showNot && (
         <div className={style.menu_user}>
-          {dataNotif.content.length > 0 ? (
-            <div className={style.notification_box}>
-              {dataNotif.content.map((notif) => (
+          {notifications.content.length > 0 ? (
+            <div onScroll={scroll} className={style.notification_div}>
+              {notifications.content.map((notif) => (
                 <Link href={`/ad/${notif.linkId}`} key={notif.notificationId}>
                   <div className={style.notification_div}>
                     <p>{notif.message}</p>

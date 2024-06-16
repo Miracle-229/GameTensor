@@ -23,6 +23,10 @@ function CardAds({ adsData }: { adsData: IGameData }) {
   const bookmark = useSelector(bookmarkData);
   const [imageLoaded, setImageLoaded] = useState(false);
   const currentUser = useSelector(currentUserData);
+  const role =
+    Array.isArray(currentUser.roles) &&
+    currentUser.roles.length > 0 &&
+    currentUser.roles[0];
   const setBookmark = async () => {
     await dispatch(postBookmarkAction(adsData.adId));
     dispatch(getBookmarkAction());
@@ -45,7 +49,6 @@ function CardAds({ adsData }: { adsData: IGameData }) {
   const clickImg = () => {
     router.push(`/ad/${adsData.adId}`);
   };
-
   return (
     <div className={style.main}>
       {imageSrc ? (
@@ -62,7 +65,7 @@ function CardAds({ adsData }: { adsData: IGameData }) {
           />
         </button>
       ) : (
-        <Link href={`/ad/${adsData.adId}`}>
+        <button type="button" className={style.link} onClick={clickImg}>
           <Image
             className={style.image}
             src="/noimage.jpg"
@@ -70,7 +73,7 @@ function CardAds({ adsData }: { adsData: IGameData }) {
             height={165}
             alt="GameTensor"
           />
-        </Link>
+        </button>
       )}
       <div className={style.ads_inf_main}>
         <div className={style.inf}>
@@ -90,22 +93,28 @@ function CardAds({ adsData }: { adsData: IGameData }) {
             </h4>
           </Link>
           <>
-            {isBookmarked ? (
-              <button
-                className={`${currentUser ? style.bookmark : style.none}`}
-                type="button"
-                onClick={unsetBookmark}
-              >
-                <FaBookmark className={style.icon} />
-              </button>
+            {adsData.status !== 'BLOCKED' && role === 'ROLE_USER' ? (
+              <>
+                {isBookmarked ? (
+                  <button
+                    className={`${currentUser ? style.bookmark : style.none}`}
+                    type="button"
+                    onClick={unsetBookmark}
+                  >
+                    <FaBookmark className={style.icon} />
+                  </button>
+                ) : (
+                  <button
+                    className={`${currentUser ? style.bookmark : style.none}`}
+                    type="button"
+                    onClick={setBookmark}
+                  >
+                    <FaRegBookmark className={style.icon} />
+                  </button>
+                )}
+              </>
             ) : (
-              <button
-                className={`${currentUser ? style.bookmark : style.none}`}
-                type="button"
-                onClick={setBookmark}
-              >
-                <FaRegBookmark className={style.icon} />
-              </button>
+              <div />
             )}
           </>
         </div>

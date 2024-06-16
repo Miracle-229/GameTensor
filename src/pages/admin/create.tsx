@@ -21,12 +21,20 @@ function Create() {
     hideAlertError,
   } = useAlert();
 
-  const create = () => {
-    if (tagName.trim() !== '') {
-      dispatch(postTagAction(tagName));
-      setTagName('');
-      showAlertSuccess();
-    } else {
+  const create = async () => {
+    try {
+      const response = await dispatch(postTagAction(tagName));
+      console.log(response.type);
+      if (response.type === 'postTag/rejected') {
+        hideAlertSuccess();
+        showAlertError();
+      }
+      if (response.type === 'postTag/fulfilled') {
+        hideAlertError();
+        showAlertSuccess();
+        setTagName('');
+      }
+    } catch {
       showAlertError();
     }
   };

@@ -75,9 +75,14 @@ export default function Edit({
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
+      const validImageTypes = ['image/jpeg', 'image/png'];
       const selectedFiles = Array.from(e.target.files).filter((file) => {
         const fileType = file.type.toLowerCase();
-        return fileType === 'image/jpeg' || fileType === 'image/png';
+        if (!validImageTypes.includes(fileType)) {
+          setErrorCountFiles('Need only photos');
+          showAlertError();
+        }
+        return validImageTypes.includes(fileType);
       });
 
       const totalImages =
@@ -231,24 +236,35 @@ export default function Edit({
           <input
             placeholder="Write title"
             type="text"
+            required
             value={title}
+            maxLength={48}
             onChange={(e) => setTitle(e.target.value)}
           />
           <TagsSearch selected={gameData.tags} tags={tagsData} />
           <h3>Description</h3>
           <textarea
+            required
             value={description}
+            maxLength={256}
             onChange={(e) => setDescription(e.target.value)}
           />
           <h3>Price</h3>
           <input
+            required
             placeholder="Choose price"
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'e' || e.key === 'E') {
+              if (['e', 'E', '-', '+'].includes(e.key)) {
                 e.preventDefault();
+              }
+            }}
+            onInput={(e) => {
+              const input = e.target as HTMLInputElement;
+              if (input.value && Number(input.value) < 0) {
+                input.value = '';
               }
             }}
           />

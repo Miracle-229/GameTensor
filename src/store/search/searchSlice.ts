@@ -9,13 +9,42 @@ import { searchGamesAction } from './searchThunk';
 const hydrate = createAction<AppState>(HYDRATE);
 
 type SearchState = {
-  data: IGameData[];
+  data: {
+    content: IGameData[];
+    pageable: {
+      pageNumber: number;
+    };
+    totalPages: number;
+  };
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 };
 
 const initialState: SearchState = {
-  data: [],
+  data: {
+    content: [
+      {
+        adId: 0,
+        user: {
+          login: '',
+          userId: 0,
+        },
+        title: '',
+        background_image: '',
+        price: '',
+        date: '',
+        tags: [],
+        description: '',
+        creationDate: '',
+        medias: [],
+        status: '',
+      },
+    ],
+    pageable: {
+      pageNumber: 0,
+    },
+    totalPages: 0,
+  },
   status: 'idle',
   error: null,
 };

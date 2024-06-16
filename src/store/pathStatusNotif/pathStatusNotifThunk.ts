@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 export const patchStatusNotifAction = createAsyncThunk(
   'pathStatusUser',
-  async (ids: string[]) => {
+  async (ids: number[]) => {
     try {
       const response = await api.patch(`notification/status`, {
         isRead: true,

@@ -99,10 +99,12 @@
 }
 
 .notification_div {
-  border-bottom: 1px solid white;
+  max-height: 400px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   padding-top: 10px;
+  padding-right: 10px;
   padding-bottom: 10px;
   span {
     color: #605f5f;

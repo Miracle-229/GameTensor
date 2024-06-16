@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/no-unescaped-entities */
 import RegistrationLayout from '@/layouts/RegistrationLayout';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import style from '@/styles/Registration.module.scss';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -39,35 +39,38 @@ function Login() {
     setPassword(trimmedPassword);
   };
 
-  useEffect(() => {
-    dispatch(getUserNameAction(login));
-  }, [dispatch, login]);
+  // useEffect(() => {
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // }, [dispatch, login]);
+
+  const loginFunc = async () => {
     try {
-      if (user.status !== 'BLOCKED') {
-        const response = await dispatch(loginAction({ login, password }));
-
-        if (response.type === 'login/rejected') {
-          showAlertError();
-          return;
-        }
-        if (localStorage.getItem('accessToken')) {
-          setCookie('user', user, { maxAge: 60 * 60 * 24 });
-          localStorage.setItem('user', JSON.stringify(currentUser));
-        }
-        router.push('/');
-        setIsLoading(true);
-      } else {
-        setErrorBlock('You have been blocked');
+      const response = await dispatch(loginAction({ login, password }));
+      if (response.type === 'login/rejected') {
         showAlertError();
+        return;
       }
+      if (localStorage.getItem('accessToken')) {
+        setCookie('user', user, { maxAge: 60 * 60 * 24 });
+        localStorage.setItem('user', JSON.stringify(currentUser));
+      }
+      router.push('/');
+      setIsLoading(true);
     } catch (error) {
       showAlertError();
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const response = await dispatch(getUserNameAction(login));
+    if (response.payload.status !== 'BLOCKED') {
+      loginFunc();
+    } else if (response.payload.status === 'BLOCKED') {
+      setErrorBlock('You have been blocked');
+      showAlertError();
+    }
+  };
   return (
     <RegistrationLayout title="Login">
       <div
@@ -81,12 +84,14 @@ function Login() {
           <h1>Login</h1>
           <input
             value={login}
+            required
             onChange={handleLoginChange}
             pattern="^\S+(\s\S+)*$"
             placeholder="Login"
             type="text"
           />
           <input
+            required
             value={password}
             onChange={handlePasswordChange}
             placeholder="Password"

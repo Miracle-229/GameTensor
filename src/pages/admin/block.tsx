@@ -8,20 +8,31 @@ import { getUsersAction } from '@/store/getUsers/getUsersThunk';
 import { patchStatusUserAction } from '@/store/patchStatusUser/patchStatusUserThunk';
 import { useDispatch, useSelector } from 'react-redux';
 import { usersData } from '@/store/getUsers/getUsersSelector';
+import Link from 'next/link';
 
 function Block() {
   const dispatch = useDispatch<AppDispatch>();
   const [searchTerm, setSearchTerm] = useState('');
   const userData = useSelector(usersData);
   const [userList, setUserList] = useState<IAuth[]>([]);
-
+  const [currentPage, setCurrentPage] = useState(0);
   useEffect(() => {
-    dispatch(getUsersAction());
+    const fetchUsers = async () => {
+      await dispatch(getUsersAction());
+    };
+    fetchUsers();
   }, [dispatch]);
 
   useEffect(() => {
-    setUserList(userData);
+    const filteredUserData = userData.filter((user) => user.login !== '');
+    setUserList((prevState) => [...prevState, ...filteredUserData]);
   }, [userData]);
+
+  const scroll = async () => {
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    await dispatch(getUsersAction(nextPage));
+  };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const trimmedValue = event.target.value.trim().replace(/\s+/g, ' ');
@@ -33,7 +44,7 @@ function Block() {
     );
   };
 
-  const toggleBlock = async (userId: number) => {
+  const toggleBlock = async (userId: string | number) => {
     const currentUser = userList.find((user) => user.userId === userId);
     const newStatus = currentUser?.status === 'ACTIVE' ? 'BLOCKED' : 'ACTIVE';
 
@@ -64,10 +75,18 @@ function Block() {
               onChange={handleSearch}
             />
           </div>
-          <ul>
+          <ul onScroll={scroll}>
+            <div>username</div>
             {userList.map((user) => (
-              <li key={user.userId}>
-                <span>{user.login}</span>
+              <li
+                className={`${
+                  user.status === 'ACTIVE'
+                    ? style.user_line
+                    : style.user_line_block
+                }`}
+                key={user.userId}
+              >
+                <Link href={`/user/${user.login}`}>{user.login}</Link>
                 <button type="button" onClick={() => toggleBlock(user.userId!)}>
                   {user.status === 'ACTIVE' ? 'Block' : 'Unblock'}
                 </button>

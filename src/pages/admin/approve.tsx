@@ -11,28 +11,102 @@ import { AppDispatch } from '@/store/store';
 import { adsData } from '@/store/ads/adsSelector';
 import { getAdsAction } from '@/store/ads/adsThunk';
 import { patchStatusAdAction } from '@/store/patchStatusAd/patchStatusSelectorAd';
+import { TbFileSad } from 'react-icons/tb';
+import { searchGamesAction } from '@/store/search/searchThunk';
+import { searchData } from '@/store/search/searchSelector';
 
 function Approve() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const dataAds = useSelector(adsData);
+  const dataSearch = useSelector(searchData);
   const dispatch = useDispatch<AppDispatch>();
   const [statusFilter, setStatusFilter] = useState('CREATED');
+  const [isLoading, setIsLoading] = useState(false);
+  const [filteredAds, setFilteredAds] = useState<IGameData[]>([]);
+  const totalPages = searchTerm ? dataSearch.totalPages : dataAds.totalPages;
+
+  const fetchAds = async (newStatus: string) => {
+    let loadingTimer;
+    setIsLoading(false);
+
+    try {
+      loadingTimer = setTimeout(() => setIsLoading(true), 2000);
+      const response = await dispatch(
+        getAdsAction({ status: newStatus, page: currentPage })
+      );
+      clearTimeout(loadingTimer);
+      setFilteredAds(response.payload.content);
+      setIsLoading(false);
+    } catch (error) {
+      clearTimeout(loadingTimer);
+      setIsLoading(false);
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    dispatch(getAdsAction({ status: statusFilter, page: currentPage }));
+    const fetchAdsData = async () => {
+      let loadingTimer;
+      setIsLoading(false);
+
+      try {
+        loadingTimer = setTimeout(() => setIsLoading(true), 700);
+        const response = await dispatch(
+          getAdsAction({ status: statusFilter, page: currentPage })
+        );
+        clearTimeout(loadingTimer);
+        setFilteredAds(response.payload.content);
+        setIsLoading(false);
+      } catch (error) {
+        clearTimeout(loadingTimer);
+        setIsLoading(false);
+        console.error(error);
+      }
+    };
+    fetchAdsData();
   }, [dispatch, currentPage, statusFilter]);
 
-  const filteredAds = dataAds.content.filter(
-    (ad: IGameData) =>
-      ad.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (statusFilter === 'CREATED' || ad.status === statusFilter)
-  );
+  const search = async (query: string) => {
+    let loadingTimer;
+    setIsLoading(false);
+
+    try {
+      loadingTimer = setTimeout(() => setIsLoading(true), 700);
+      const response = await dispatch(
+        searchGamesAction({ query: `${query}%`, status: statusFilter })
+      );
+      clearTimeout(loadingTimer);
+      if (
+        Array.isArray(response.payload.content) &&
+        response.payload.content.length > 0
+      ) {
+        setFilteredAds(response.payload.content);
+      } else {
+        setFilteredAds([]);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      clearTimeout(loadingTimer);
+      setIsLoading(false);
+      console.error(error);
+    }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchTerm(query);
+    if (query.trim() === '') {
+      fetchAds(statusFilter);
+    } else {
+      search(query);
+    }
+  };
 
   const changeStatus = (newStatus: string) => {
     setStatusFilter(newStatus);
     setCurrentPage(0);
-    dispatch(getAdsAction({ status: newStatus, page: currentPage }));
+    fetchAds(newStatus);
   };
 
   const changeAdStatus = async (
@@ -41,7 +115,7 @@ function Approve() {
   ) => {
     const newStatus = event.target.value;
     await dispatch(patchStatusAdAction({ key: newStatus, id: adId }));
-    dispatch(getAdsAction({ status: statusFilter, page: currentPage }));
+    fetchAds(statusFilter);
   };
 
   const handlePageChange = (page: number) => {
@@ -51,9 +125,10 @@ function Approve() {
       scrollableDiv.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
   const renderPagination = () => {
     const pageNumbers = [];
-    for (let i = 0; i < dataAds.totalPages; i++) {
+    for (let i = 0; i < totalPages; i++) {
       pageNumbers.push(i);
     }
 
@@ -87,7 +162,7 @@ function Approve() {
           <input
             placeholder="Search ads..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchChange}
             type="text"
           />
         </div>
@@ -103,24 +178,42 @@ function Approve() {
           </select>
         </div>
         <div className={style.ads} id="scrollableDiv">
-          {filteredAds.map((data) => (
-            <div className={style.ads_block} key={data.adId}>
-              <select
-                defaultValue={data.status}
-                onChange={(e) => changeAdStatus(e, data.adId)}
-              >
-                {data.status === 'CREATED' && (
-                  <option value="CREATED">New</option>
-                )}
-                <option value="APPROVED">Approved</option>
-                <option value="BLOCKED">Blocked</option>
-                <option value="CLOSED">Deleted</option>
-              </select>
-              <CardAds adsData={data} />
-            </div>
-          ))}
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : filteredAds.length > 0 ? (
+            <>
+              {filteredAds.map((data) => (
+                <div className={style.ads_block} key={data.adId}>
+                  {data.status !== 'CLOSED' && (
+                    <select
+                      defaultValue=""
+                      onChange={(e) => changeAdStatus(e, data.adId)}
+                    >
+                      <option value="" disabled hidden>
+                        Select
+                      </option>
+                      {data.status === 'CREATED' && (
+                        <option value="CREATED">New</option>
+                      )}
+                      {data.status !== 'APPROVED' && (
+                        <option value="APPROVED">Approved</option>
+                      )}
+                      {data.status !== 'BLOCKED' && (
+                        <option value="BLOCKED">Blocked</option>
+                      )}
+                    </select>
+                  )}
+                  <CardAds adsData={data} />
+                </div>
+              ))}
+            </>
+          ) : (
+            <p style={{ fontSize: '45px', width: '100%' }}>
+              Not ads <TbFileSad />
+            </p>
+          )}
         </div>
-        <div>{dataAds.totalPages > 0 && renderPagination()}</div>
+        <div>{totalPages > 1 && renderPagination()}</div>
       </div>
     </AdminLayout>
   );

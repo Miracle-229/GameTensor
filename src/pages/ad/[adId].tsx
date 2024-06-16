@@ -27,6 +27,7 @@ import { MdEdit } from 'react-icons/md';
 import { useRouter } from 'next/router';
 import { getUserNameAction } from '@/store/getUserName/getUserNameThunk';
 import { userNameData } from '@/store/getUserName/getUserNameSelector';
+import { setCookie } from 'cookies-next';
 
 interface Image {
   original: string;
@@ -39,6 +40,10 @@ export default function IdGamePage({ game }: { game: IGameData }) {
   const { adId } = router.query;
   const userData = useSelector(currentUserData);
   const { login } = userData;
+  const role =
+    Array.isArray(userData.roles) &&
+    userData.roles.length > 0 &&
+    userData.roles[0];
   const [isBookmarkLoaded, setIsBookmarkLoaded] = useState(false);
   const [images, setImages] = useState<Image[]>([]);
   const [index, setIndex] = useState(0);
@@ -58,12 +63,17 @@ export default function IdGamePage({ game }: { game: IGameData }) {
 
   const editClick = () => {
     router.push(`/ad/edit/${adId}`);
+    console.log(1234);
   };
 
   useEffect(() => {
     dispatch(getUserNameAction(game.user.login));
   }, [dispatch, game.user.login]);
-
+  useEffect(() => {
+    if (localStorage.getItem('accessToken')) {
+      setCookie('user', userData, { maxAge: 60 * 60 * 24 });
+    }
+  }, [userData]);
   useEffect(() => {
     const fetchImages = async () => {
       const promises = game.medias.map((media) =>
@@ -90,6 +100,7 @@ export default function IdGamePage({ game }: { game: IGameData }) {
     }
     dispatch(getBookmarkAction());
   };
+
   useEffect(() => {
     if (!isBookmarkLoaded) {
       dispatch(getBookmarkAction());
@@ -176,7 +187,7 @@ export default function IdGamePage({ game }: { game: IGameData }) {
               </Link>
             </div>
           </div>
-          <div style={{ display: 'flex' }}>
+          <div className={style.tags_box}>
             <span className={style.overview}>Tags:</span>
             {game.tags.map((item) => (
               <p className={style.overview_tags} key={game.adId}>
@@ -190,43 +201,47 @@ export default function IdGamePage({ game }: { game: IGameData }) {
             )}
           </div>
           <div className={style.chat_row}>
-            {login !== game.user.login && user.status !== 'BLOCKED' && (
-              <button
-                className={style.chat}
-                type="button"
-                onClick={handleChatClick}
-              >
-                <IoMdChatbubbles size={25} /> Chat
-              </button>
+            {role === 'ROLE_USER' && (
+              <>
+                {login !== game.user.login && user.status !== 'BLOCKED' && (
+                  <button
+                    className={style.chat}
+                    type="button"
+                    onClick={handleChatClick}
+                  >
+                    <IoMdChatbubbles size={25} /> Chat
+                  </button>
+                )}
+                <>
+                  {isBookmarked ? (
+                    <button
+                      className={`${user ? style.bookmark : style.none}`}
+                      type="button"
+                      onClick={unsetBookmark}
+                    >
+                      <FaBookmark size={35} className={style.icon} />
+                    </button>
+                  ) : (
+                    <button
+                      className={`${user ? style.bookmark : style.none}`}
+                      type="button"
+                      onClick={setBookmark}
+                    >
+                      <FaRegBookmark size={35} className={style.icon} />
+                    </button>
+                  )}
+                  {login === game.user.login && (
+                    <button
+                      type="button"
+                      onClick={editClick}
+                      className={style.edit}
+                    >
+                      <MdEdit size={35} />
+                    </button>
+                  )}
+                </>
+              </>
             )}
-            <>
-              {isBookmarked ? (
-                <button
-                  className={`${user ? style.bookmark : style.none}`}
-                  type="button"
-                  onClick={unsetBookmark}
-                >
-                  <FaBookmark size={35} className={style.icon} />
-                </button>
-              ) : (
-                <button
-                  className={`${user ? style.bookmark : style.none}`}
-                  type="button"
-                  onClick={setBookmark}
-                >
-                  <FaRegBookmark size={35} className={style.icon} />
-                </button>
-              )}
-              {login === game.user.login && (
-                <button
-                  type="button"
-                  onClick={editClick}
-                  className={style.edit}
-                >
-                  <MdEdit size={35} />
-                </button>
-              )}
-            </>
           </div>
         </div>
       </div>
@@ -246,11 +261,28 @@ export default function IdGamePage({ game }: { game: IGameData }) {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context: GetServerSidePropsContext) => {
-    try {
-      const id = context.params?.adId as string;
-      const game = await store.dispatch(getIdAction(id));
-      const { role } = context.req.cookies;
-      if (game.payload.status === 'BLOCKED' && role !== 'ROLE_ADMIN') {
+    const id = context.params?.adId as string;
+    const game = await store.dispatch(getIdAction(id));
+    const { role, user } = context.req.cookies;
+
+    if (
+      (game.payload?.status === 'BLOCKED' ||
+        game.payload?.status === 'CLOSED') &&
+      role !== 'ROLE_ADMIN'
+    ) {
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
+      };
+    }
+    if (user) {
+      const userParse = JSON.parse(user);
+      if (
+        userParse.login !== game.payload.user.login &&
+        game.payload?.status === 'CREATED'
+      ) {
         return {
           redirect: {
             destination: '/',
@@ -258,23 +290,27 @@ export const getServerSideProps = wrapper.getServerSideProps(
           },
         };
       }
-      if (!game.payload) {
-        return {
-          notFound: true,
-        };
-      }
+    }
+    if (!role && game.payload?.status === 'CREATED') {
       return {
-        props: {
-          game: game.payload ? game.payload : null,
-        },
-      };
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      return {
-        props: {
-          game: null,
+        redirect: {
+          destination: '/',
+          permanent: false,
         },
       };
     }
+    if (!game.payload || game.payload === undefined) {
+      return {
+        notFound: true,
+      };
+    }
+
+    const props = {
+      game: game.payload ? game.payload : null,
+    };
+
+    return {
+      props,
+    };
   }
 );

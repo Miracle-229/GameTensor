@@ -6,6 +6,7 @@ export type IAuth = {
   accessToken?: string;
   refreshToken?: string;
   status?: string;
+  roles?: string[];
   subscribers?: IAuth[];
   followers?: IAuth[];
 };
@@ -68,7 +69,7 @@ export type IBookmarkData = {
 };
 
 export type IStatusData = {
-  id: number;
+  id: number | string;
   key: string;
 };
 export type AdFormData = {
@@ -103,6 +104,6 @@ export type INotif = {
   creationDate: string;
   linkId: string;
   message: string;
-  notificationId: string;
+  notificationId: number;
   read: boolean;
 };
