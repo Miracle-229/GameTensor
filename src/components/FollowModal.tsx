@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
+import React, { useState } from 'react';
 import Modal from 'react-modal';
 import style from '@/styles/FollowModal.module.scss';
 import { IoSearch } from 'react-icons/io5';

@@ -15,8 +15,6 @@ function TagsSearch({ selected, tags }: { selected?: ITags[]; tags: ITags[] }) {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [tagsLoad, setTagsLoad] = useState(false);
 
-  console.log(router.asPath);
-
   useEffect(() => {
     if (
       router.asPath !== '/ad/create' &&

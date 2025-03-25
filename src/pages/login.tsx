@@ -39,10 +39,6 @@ function Login() {
     setPassword(trimmedPassword);
   };
 
-  // useEffect(() => {
-
-  // }, [dispatch, login]);
-
   const loginFunc = async () => {
     try {
       const response = await dispatch(loginAction({ login, password }));

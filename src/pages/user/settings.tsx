@@ -40,7 +40,6 @@ function Settings() {
       const response = await dispatch(
         changePasswordAction({ oldPass, newPass })
       );
-      console.log(response);
       if (response.type === 'changePassword/rejected') {
         showAlertError();
         hideAlertSuccess();

@@ -24,7 +24,7 @@ function Create() {
   const create = async () => {
     try {
       const response = await dispatch(postTagAction(tagName));
-      console.log(response.type);
+
       if (response.type === 'postTag/rejected') {
         hideAlertSuccess();
         showAlertError();

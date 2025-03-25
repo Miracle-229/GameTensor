@@ -45,7 +45,6 @@ function Chat({ initialDialogId }: ChatProps) {
   const [isMaxHeightReached, setIsMaxHeightReached] = useState(false);
   const [isAddedNewMessage, setIsAddedNewMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  console.log(data);
 
   const loadMoreMessages = async () => {
     if (isLoading || isMaxHeightReached) return;
